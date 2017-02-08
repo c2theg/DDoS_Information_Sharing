@@ -6,19 +6,27 @@
 
 #--- Force Python2 as Suds doesn't support Python3 fully as of 11/10/2016
 #This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
-#Inital: 12/23/16  Updated: 2/5/17  
+#Inital: 12/23/16  Updated: 2/5/17
 from socket import *
 from io import StringIO
 from datetime import datetime
-import errno, sys, json, os, time, logging, urllib, argparse, base64, ssl
+import errno, sys, json, os, time, logging, urllib, argparse, base64, ssl, re, string
 import requests
 import urllib2
-#------- Suds. ------- 
+#from sslcontext import create_ssl_context, HTTPSTransport
+
+#------- Suds ------- 
 # - https://pypi.python.org/pypi/suds 
 # - https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html
 # - https://bitbucket.org/jurko/suds
+
 import suds
 import suds.client
+
+#logging.basicConfig(level=logging.INFO)
+#from suds.client import Client
+#logging.getLogger('suds.client').setLevel(logging.DEBUG)
+
 #------ MaxMind Legacy GeoIP API ------  https://github.com/maxmind/GeoIP2-python --- https://github.com/maxmind/geoip-api-python
 try:
     import GeoIP
@@ -31,7 +39,7 @@ PythonVer = sys.version_info
 appCurrentPath = os.getcwd()
 appCurrentPath.replace("\/",'\\/')
 appTime = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-appVersion = '0.2.15'
+appVersion = '0.2.17'
 SourcesFound = 0
 OutputDict = []
 OutputJSON = ""
@@ -140,6 +148,18 @@ else:
     #ssl._create_default_https_context = _create_unverified_https_context
     ssl._create_default_https_context = ssl._create_unverified_context  #SSL fix for python 2.7.6+
 
+    
+    
+# Customize these settings:
+#sslverify = True
+#cafile = None
+#capath = None
+
+#kwargs = {}
+#sslContext = create_ssl_context(sslverify, cafile, capath)
+#kwargs['transport'] = HTTPSTransport(sslContext)
+
+    
 hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
        'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
@@ -190,7 +210,9 @@ try:
     t = suds.transport.https.HttpAuthenticated(username=varArborUser, password=varArborPasswd)
     t.handler = urllib2.HTTPDigestAuthHandler(t.pm)
     t.urlopener = urllib2.build_opener(t.handler)
+    #client = suds.client.Client(url, **kwargs)
     client = suds.client.Client(url='file:///' + WSDLfile, location=varArborURL + '/soap/sp', transport=t)
+    #client = suds.client.Client(url='file:///' + WSDLfile, location=varArborURL + '/soap/sp', transport=t, **kwargs)
     client.set_options(service='PeakflowSPService', port='PeakflowSPPort', cachingpolicy=1) # retxml=false, prettyxml=false   # https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html    
     ArborResultRAW = client.service.getDosAlertDetails(varArgumentReceieved)
     #ArborMitResultRAW = client.service.getMitigationStatisticsByIdXML(varArgumentReceieved)
@@ -223,99 +245,117 @@ try:
                         CleanIP = x.id.split("/")[0]                    
                         TempOutputDict['IPaddress'] = CleanIP
                         #---- do GeoIP Lookup ----------
-                        if ':' in x.id:  # this is a IPv6 Address
-                            #print " (IPv6) "
-                            gir = geoip_v6.record_by_addr(CleanIP)
-                            if gir is not None:
-                                #------------ ASN ---------
-                                girASN = geoipASN_v6.org_by_addr(CleanIP)
-                                #print "ASN: " + str(girASN)   # AS16509 Amazon.com, Inc.
-                                if girASN is not None:
-                                    try:
-                                        ASN_Number = girASN.split(' ', 1)[0] # AS36351
-                                        ASN_Number = ASN_Number[2:]
-                                        ASN_Name = girASN.split(' ', 1)[1]   # Amazon.com, Inc.
-                                    except ValueError:
-                                        raise
-                                else:
-                                    ASN_Number = 0
-                                    ASN_Name = "na"
-                                #---------- Generate Output ---------------------------------------------
-                                if gir['city'] is not None:
-                                    TempOutputDict['City'] = str(gir['city']).decode('utf-8', 'ignore')
-                                else:
-                                    TempOutputDict['City'] = "na"
-                                    
-                                if gir['region'] is not None:
-                                    TempOutputDict['State'] = unicode(gir['region'], "utf-8")
-                                else:
-                                    TempOutputDict['State'] = "na"
-
-                                if gir['country_code'] is not None:
-                                    TempOutputDict['Country'] = unicode(gir['country_code'], "utf-8")
-                                else:
-                                    TempOutputDict['Country'] = "na"
-
-                                #TempOutputDict['latitude'] = gir['latitude']
-                                #TempOutputDict['longitude'] = gir['longitude']
-                                TempOutputDict['Extra'] = str(gir['latitude']) + "," + str(gir['longitude'])
-                                TempOutputDict['TotalBPS'] = x.net.bps
-                                TempOutputDict['TotalPPS'] = x.net.pps
-                                TempOutputDict['SourceASN'] = ASN_Number
-                                TempOutputDict['SourceASNName'] = ASN_Name
-                                TempOutputDict['AttackType'] = misuseTypes
+                        #print " (IPv4) "
+                        gir = geoip_v4.record_by_addr(CleanIP)
+                        if gir is not None:
+                            #------------ ASN ---------
+                            girASN = geoipASN_v4.org_by_addr(CleanIP)
+                            #print "ASN: " + str(girASN)   # AS16509 Amazon.com, Inc.
+                            if girASN is not None:
+                                try:
+                                    ASN_Number = girASN.split(' ', 1)[0] # AS36351
+                                    ASN_Number = ASN_Number[2:]
+                                    ASN_Name = girASN.split(' ', 1)[1]   # Amazon.com, Inc.
+                                    ASN_Name = re.sub('[ ](?=[ ])|[^-_,A-Za-z0-9. ]+', '', ASN_Name)
+                                except ValueError:
+                                    raise
                             else:
-                                if varlocaldebugging == True:
-                                    print "GeoIP came back empty"
-                        else:   # Must be a IPv4 Address
-                            #print " (IPv4) "
-                            gir = geoip_v4.record_by_addr(CleanIP)
-                            if gir is not None:
-                                #------------ ASN ---------
-                                girASN = geoipASN_v4.org_by_addr(CleanIP)
-                                #print "ASN: " + str(girASN)   # AS16509 Amazon.com, Inc.
-                                if girASN is not None:
-                                    try:
-                                        ASN_Number = girASN.split(' ', 1)[0] # AS36351
-                                        ASN_Number = ASN_Number[2:]
-                                        ASN_Name = girASN.split(' ', 1)[1]   # Amazon.com, Inc.
-                                    except ValueError:
-                                        raise
-                                else:
-                                    ASN_Number = 0
-                                    ASN_Name = "na"
-                                #---------- Generate Output ---------------------------------------------
-                                if gir['city'] is not None:
-                                    TempOutputDict['City'] = str(gir['city']).decode('utf-8', 'ignore')
-                                else:
-                                    TempOutputDict['City'] = "na"
-                                    
-                                if gir['region'] is not None:
-                                    TempOutputDict['State'] = unicode(gir['region'], "utf-8")
-                                else:
-                                    TempOutputDict['State'] = "na"
-
-                                if gir['country_code'] is not None:
-                                    TempOutputDict['Country'] = unicode(gir['country_code'], "utf-8")
-                                else:
-                                    TempOutputDict['Country'] = "na"
-
-                                #TempOutputDict['latitude'] = gir['latitude']
-                                #TempOutputDict['longitude'] = gir['longitude']
-                                TempOutputDict['Extra'] = str(gir['latitude']) + "," + str(gir['longitude'])
-                                TempOutputDict['TotalBPS'] = x.net.bps
-                                TempOutputDict['TotalPPS'] = x.net.pps
-                                TempOutputDict['SourceASN'] = ASN_Number
-                                TempOutputDict['SourceASNName'] = ASN_Name
-                                TempOutputDict['AttackType'] = misuseTypes
+                                ASN_Number = 0
+                                ASN_Name = "na"
+                            #---------- Generate Output ---------------------------------------------
+                            if gir['city'] is not None:
+                                TempOutputDict['City'] = str(gir['city']).decode('utf-8', 'ignore')
                             else:
-                                if varlocaldebugging == True:
-                                    print "GeoIP came back empty for IP: " + CleanIP
-                        OutputDict.append(TempOutputDict)
-                        #--- Clear temp variables ---
-                        TempOutputDict = None
-                        gir = None
-                        girASN = None
+                                TempOutputDict['City'] = "na"
+                                
+                            if gir['region'] is not None:
+                                TempOutputDict['State'] = unicode(gir['region'], "utf-8")
+                            else:
+                                TempOutputDict['State'] = "na"
+
+                            if gir['country_code'] is not None:
+                                TempOutputDict['Country'] = unicode(gir['country_code'], "utf-8")
+                            else:
+                                TempOutputDict['Country'] = "na"
+
+                            #TempOutputDict['latitude'] = gir['latitude']
+                            #TempOutputDict['longitude'] = gir['longitude']
+                            TempOutputDict['Extra'] = str(gir['latitude']) + "," + str(gir['longitude'])
+                            TempOutputDict['TotalBPS'] = x.net.bps
+                            TempOutputDict['TotalPPS'] = x.net.pps
+                            TempOutputDict['SourceASN'] = ASN_Number
+                            TempOutputDict['SourceASNName'] = ASN_Name 
+                            TempOutputDict['AttackType'] = misuseTypes
+                            OutputDict.append(TempOutputDict)
+                        else:
+                            if varlocaldebugging == True:
+                                print "GeoIP came back empty for IP: " + CleanIP
+                    
+                    #--- Clear temp variables ---
+                    TempOutputDict = None
+                    gir = None
+                    girASN = None
+
+            elif '/128' in x.id:
+                if x.net.bps != 0:
+                    if x.net.pps != 0:
+                        #print "IP Address: ", x.id, "BPS: ", x.net.bps, "PPS: ", x.net.pps
+                        SourcesFound += 1
+                        TempOutputDict = {}
+                        CleanIP = x.id.split("/")[0]
+                        TempOutputDict['IPaddress'] = CleanIP
+                        #---- do GeoIP Lookup ----------  
+                        #print " (IPv6) "
+                        gir = geoip_v6.record_by_addr(CleanIP)
+                        if gir is not None:
+                            #------------ ASN ---------
+                            girASN = geoipASN_v6.org_by_addr(CleanIP)
+                            #print "ASN: " + str(girASN)   # AS16509 Amazon.com, Inc.
+                            if girASN is not None:
+                                try:
+                                    ASN_Number = girASN.split(' ', 1)[0] # AS36351
+                                    ASN_Number = ASN_Number[2:]
+                                    ASN_Name = girASN.split(' ', 1)[1]   # Amazon.com, Inc.
+                                    ASN_Name = re.sub('[ ](?=[ ])|[^-_,A-Za-z0-9. ]+', '', ASN_Name)
+                                except ValueError:
+                                    raise
+                            else:
+                                ASN_Number = 0
+                                ASN_Name = "na"
+                            #---------- Generate Output ---------------------------------------------
+                            if gir['city'] is not None:
+                                TempOutputDict['City'] = str(gir['city']).decode('utf-8', 'ignore')
+                            else:
+                                TempOutputDict['City'] = "na"
+                                
+                            if gir['region'] is not None:
+                                TempOutputDict['State'] = unicode(gir['region'], "utf-8")
+                            else:
+                                TempOutputDict['State'] = "na"
+
+                            if gir['country_code'] is not None:
+                                TempOutputDict['Country'] = unicode(gir['country_code'], "utf-8")
+                            else:
+                                TempOutputDict['Country'] = "na"
+
+                            #TempOutputDict['latitude'] = gir['latitude']
+                            #TempOutputDict['longitude'] = gir['longitude']
+                            TempOutputDict['Extra'] = str(gir['latitude']) + "," + str(gir['longitude'])
+                            TempOutputDict['TotalBPS'] = x.net.bps
+                            TempOutputDict['TotalPPS'] = x.net.pps
+                            TempOutputDict['SourceASN'] = ASN_Number
+                            TempOutputDict['SourceASNName'] = ASN_Name
+                            TempOutputDict['AttackType'] = misuseTypes
+                            OutputDict.append(TempOutputDict)
+                        else:
+                            if varlocaldebugging == True:
+                                print "GeoIP came back empty for IP: " + CleanIP
+                    #--- Clear temp variables ---
+                    TempOutputDict = None
+                    gir = None
+                    girASN = None
+            else:
+                print "Ignoring CIDR: " + x.id
 
         if varlocaldebugging == True:
             print "DONE! Found ", SourcesFound, " Sources! \n"
