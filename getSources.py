@@ -15,6 +15,9 @@ import requests
 import urllib2
 #from sslcontext import create_ssl_context, HTTPSTransport
 
+# Uncomment to disable SSL verification - Careful! This could compromise your ArborSP zone_secret
+#ssl._create_default_https_context = ssl._create_unverified_context
+
 #------- Suds ------- 
 # - https://pypi.python.org/pypi/suds 
 # - https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html
