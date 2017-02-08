@@ -6,14 +6,14 @@
 
 #--- Force Python2 as Suds doesn't support Python3 fully as of 11/10/2016
 #This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
-#Inital: 12/23/16  Updated: 2/5/17
+#Inital: 12/23/16  Updated: 2/5/17  
 from socket import *
 from io import StringIO
 from datetime import datetime
 import errno, sys, json, os, time, logging, urllib, argparse, base64, ssl
 import requests
 import urllib2
-#------- Suds ------- 
+#------- Suds. ------- 
 # - https://pypi.python.org/pypi/suds 
 # - https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html
 # - https://bitbucket.org/jurko/suds
