@@ -25,9 +25,7 @@ sudo apt-get -y upgrade
 wait
 apt-get -y dist-upgrade
 wait
-sudo apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties python python-pip python-dev screen python3-setuptools whois
-wait
-sudo apt-get install -y traceroute htop sysstat iptraf iftop slurm tcptrack bmon nethogs speedometer
+sudo apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties python python-pip python-dev screen python3-setuptools whois traceroute htop
 wait
 sudo apt-get install -y build-essential checkinstall
 sudo apt-get install -y python2.7-dev libxml2-dev libxslt1-dev
