@@ -1,3 +1,4 @@
+#!/bin/sh
 clear
 echo "
     ____  ____       _____    ____      ____                           __  _                _____ __               _            
@@ -19,40 +20,20 @@ echo $MyPath
 echo " "
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
+# -- add newer python 2.7.x repo --
+sudo add-apt-repository -y ppa:fkrull/deadsnakes-python2.7
+wait
 sudo apt-get update
 wait
 sudo apt-get -y upgrade
 wait
 #-- Upgrade to latest Kernal --
-apt-get -y dist-upgrade
+sudo apt-get -y dist-upgrade
 wait
-sudo apt-get install -y ntp ntpdate ssh openssh-server whois traceroute htop
+sudo apt-get install -y ntp ntpdate ssh openssh-server openssl libssl-dev whois traceroute htop
 wait
-sudo apt-get install -y python-software-properties python python-pip python-dev
+sudo apt-get install -y python-software-properties python python-pip python-dev python2.7
 wait
-#---- Update Python to 2.7.13 ----
-sudo apt-get -y install build-essential checkinstall
-wait
-sudo apt-get -y install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
-wait
-cd /usr/src
-wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz
-wait
-tar xzf Python-2.7.13.tgz
-wait
-cd Python-2.7.13
-wait
-#sudo ./configure
-sudo ./configure --prefix /usr/local/lib/python2.7.13 --enable-ipv6
-wait
-sudo make
-#wait
-#sudo make altinstall
-sudo make install
-wait
-# Set system default to use new version of python - https://linuxconfig.org/how-to-change-from-default-to-alternative-python-version-on-debian-linux
-#sudo update-alternatives --install /usr/bin/python python /usr/local/lib/python2.7.13 1
-
 #---- install python dependancies ----
 #-- suds --
 #sudo pip install --upgrade pip
@@ -83,26 +64,25 @@ sudo easy_install hashlib
 sudo pip install certifi
 sudo pip install urllib3[secure]
 sudo pip install 'requests[security]'
-
 #----- Done -----
 echo $MyPath
 sudo chmod -R +x .
 # sudo chmod -R 755 . && sudo chown -R ubuntu:ubuntu .
 wait
 #------ Make Directory structures -----
-SDKpath="$(pwd)/SDKs"
-mkdir $SDKpath
-cd $SDKpath/
-mkdir 7.6/
-cd ..
+#SDKpath="$(pwd)/SDKs"
+#mkdir $SDKpath
+#cd $SDKpath/
+#mkdir 7.6/
+#cd ..
 #-----------------
-mkdir libraries
-cd libraries/
-mkdir maxmind
-cd ..
+#mkdir libraries
+#cd libraries/
+#mkdir maxmind
+#cd ..
 #-----------------
 #sudo chmod g-wx,o-wx ~/.python-eggs
-wait
+#wait
 #----- Cronjob to download/update Maxmind db ------
 #write out current crontab
 crontab -l > mycron
@@ -114,9 +94,8 @@ crontab mycron
 rm mycron
 #----- Done -----
 echo "Running GeoIP db updater"
-sh ./geoipdb_updater.sh
+sudo sh ./geoipdb_updater.sh
 wait
 clear
 echo "All done...   Starting DDoS Infomation Sharing application!"
-sudo python collector.py
-
+sudo python ./collector.py

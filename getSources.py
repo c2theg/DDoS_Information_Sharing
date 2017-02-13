@@ -1,4 +1,4 @@
-#!/usr/local/lib/python2.7.13/bin/python2.7
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 # Copyright (c) 2016-2017 Christopher Gray & Daniel Phan - Comcast Cable Communications LLC.
 # All rights reserved.
@@ -223,7 +223,7 @@ except OSError:
 #    mitDetailsResponseRAW = mitDetailsResponse.json()
 #--------------------------------------------------------------------------------------------------------------------------
 if varlocaldebugging == True:
-    print "Connecting to:",varArborURL," User: ",varArborUser, " WSDL: " + WSDLfile
+    print "\n\n\n Connecting to:",varArborURL," User: ",varArborUser, " WSDL: " + WSDLfile
 try:
     t = suds.transport.https.HttpAuthenticated(username=varArborUser, password=varArborPasswd)
     t.handler = urllib2.HTTPDigestAuthHandler(t.pm)

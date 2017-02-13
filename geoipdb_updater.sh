@@ -50,6 +50,19 @@ download()
     echo " ---------- "
     echo " "    
 }
+
+#---------------------------- GeoIP2 Lite City ----------------------------------------
+file="GeoLite2-City.mmdb.gz"
+newFile="GeoLite2-City.mmdb"
+#http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
+
+download "" $file $newFile
+#---------------------------- GeoIP2 Lite Country ----------------------------------------
+file="GeoLite2-Country.mmdb.gz"
+newFile="GeoLite2-Country.mmdb"
+#http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz
+
+download "" $file $newFile
 #---------------------------- Country ----------------------------------------
 file="GeoIP.dat.gz"
 newFile="GeoIP.dat"
