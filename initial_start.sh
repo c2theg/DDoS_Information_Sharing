@@ -23,43 +23,77 @@ sudo apt-get update
 wait
 sudo apt-get -y upgrade
 wait
+#-- Upgrade to latest Kernal --
 apt-get -y dist-upgrade
 wait
-sudo apt-get install -y ntp ntpdate ssh openssh-server libicu-dev python-software-properties python python-pip python-dev screen python3-setuptools whois traceroute htop
+sudo apt-get install -y ntp ntpdate ssh openssh-server whois traceroute htop
 wait
-sudo apt-get install -y build-essential checkinstall
-sudo apt-get install -y python2.7-dev libxml2-dev libxslt1-dev
+sudo apt-get install -y python-software-properties python python-pip python-dev
+wait
+#---- Update Python to 2.7.13 ----
+sudo apt-get -y install build-essential checkinstall
+wait
+sudo apt-get -y install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+wait
+cd /usr/src
+wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz
+wait
+tar xzf Python-2.7.13.tgz
+wait
+cd Python-2.7.13
+wait
+#sudo ./configure
+sudo ./configure --prefix /usr/local/lib/python2.7.13 --enable-ipv6
+wait
+sudo make
+#wait
+#sudo make altinstall
+sudo make install
+wait
+# Set system default to use new version of python - https://linuxconfig.org/how-to-change-from-default-to-alternative-python-version-on-debian-linux
+#sudo update-alternatives --install /usr/bin/python python /usr/local/lib/python2.7.13 1
+
 #---- install python dependancies ----
 #-- suds --
-sudo apt-get install -y python-pip
+#sudo pip install --upgrade pip
+sudo pip install --upgrade virtualenv
+#sudo pip install suds
+#sudo easy_install https://fedorahosted.org/releases/s/u/suds/python-suds-0.4.1.tar.gz
+
+# More Info: https://pypi.python.org/pypi/suds-jurko/0.6
+sudo easy_install https://pypi.python.org/packages/bd/6f/54fbf0999a606680d27c69b1ad12dfff62768ecb9fe48524cebda6eb4423/suds-jurko-0.6.tar.bz2
+#sudo pip install suds-jurko
 wait
-sudo pip install suds-jurko
-sudo pip install suds
 sudo pip --upgrade install
-sudo easy_install https://fedorahosted.org/releases/s/u/suds/python-suds-0.4.1.tar.gz
-#-- GeoIP --
 wait
+#-- GeoIP --
+# https://pypi.python.org/pypi/geoip2
 sudo apt-cache search geoip
 sudo apt-get install -y libgeoip-dev
 sudo apt-get install -y python-geoip
 wait
+sudo pip install geoip2
 sudo pip install GeoIP
 sudo pip install python-geoip-geolite2
+wait
 #----- others ---
 sudo pip install requests
+sudo pip install --upgrade requests
+sudo easy_install hashlib
+sudo pip install certifi
+sudo pip install urllib3[secure]
+sudo pip install 'requests[security]'
+
 #----- Done -----
-sudo chmod +x collector.py
-sudo chmod +x getSources.py
-sudo chmod +x geoipdb_updater.sh
+echo $MyPath
+sudo chmod -R +x .
+# sudo chmod -R 755 . && sudo chown -R ubuntu:ubuntu .
 wait
 #------ Make Directory structures -----
-mkdir SDKs
-cd SDKs/
-mkdir SDKs/6.0/
-mkdir SDKs/7.0/
-mkdir SDKs/7.6/
-mkdir SDKs/8.0/
-mkdir SDKs/8.1/
+SDKpath="$(pwd)/SDKs"
+mkdir $SDKpath
+cd $SDKpath/
+mkdir 7.6/
 cd ..
 #-----------------
 mkdir libraries
@@ -74,6 +108,7 @@ wait
 crontab -l > mycron
 #echo new cron into cron file
 echo "20 4 * */1 3 echo $MyPath/geoipdb_updater.sh" >> mycron
+#echo "20 4 * */1 3 echo $MyPath/updater.sh" >> mycron
 #install new cron file
 crontab mycron
 rm mycron
@@ -83,4 +118,5 @@ sh ./geoipdb_updater.sh
 wait
 clear
 echo "All done...   Starting DDoS Infomation Sharing application!"
-sudo python ./collector.py
+sudo python collector.py
+
