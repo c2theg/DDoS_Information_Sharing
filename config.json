@@ -1,6 +1,6 @@
 {
     "local": {
-        "syslog_port":  514,
+        "syslog_port":  1069,
         "syslog_proto": "udp",
         "output_debug": true,
         "log_to_file":  false,
@@ -11,7 +11,7 @@
         "source_collector": "getSources.py"
     },
     "email": {
-        "server":   "mailrelay.comcast.com",
+        "server":   "mailrelay.server.com",
         "port":     465,
         "auth":     false,
         "username": "",
@@ -21,13 +21,13 @@
         "cc":       "",
         "bcc":      ""
     },
-    "remote": {
-        "url":      "https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>"
-    },
-    "geo": {
+    "remote": [ 
+    	{"url": "https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "extra": "" }    	
+    ],
+	"geo": {
         "files_path": "libraries/maxmind/",
         "update_url": "http://dev.maxmind.com/geoip/legacy/geolite/"
-    },
+    },    
     "arbor": {
         "url":      "192.168.1.2",
         "port":     443,
@@ -35,14 +35,13 @@
         "version":  7.6,
         "user":     "arbor",
         "passwd":   "<PASSWORD>",
-        "wsdl":     "PeakflowSP.wsdl",
-        "call":     "getDosAlertDetails"
+        "wsdl":     "PeakflowSP.wsdl"
     },
     "identity": {
         "company_type": "isp",
         "name":         "<COMPANY NAME>",
         "asn":          1234,
-        "domain":       "comcast.com",
+        "domain":       "<Company URL>.com",
         "callback_url": ""
     }
 }

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/local/lib/python2.7.13/bin/python2.7
 # -*- coding: utf-8 -*-
 # Copyright (c) 2016-2017 Christopher Gray & Daniel Phan - Comcast Cable Communications LLC.
 # All rights reserved.
@@ -10,26 +10,31 @@
 from socket import *
 from io import StringIO
 from datetime import datetime
-import errno, sys, json, os, time, logging, urllib, argparse, base64, ssl, re, string
-import requests
-import urllib2
+import errno, sys, json, os, time, logging, argparse, base64, ssl, re, string
+import requests, certifi
+import urllib, urllib2, urllib3
+#urllib3.disable_warnings()
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
 #from sslcontext import create_ssl_context, HTTPSTransport
-
 #------- Suds ------- 
-# - https://pypi.python.org/pypi/suds 
-# - https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html
-# - https://bitbucket.org/jurko/suds
-
+# https://pypi.python.org/pypi/suds 
+# https://pypi.python.org/pypi/suds-jurko/0.6
+# https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html
+# https://bitbucket.org/jurko/suds
 import suds
 import suds.client
-
 #logging.basicConfig(level=logging.INFO)
 #from suds.client import Client
 #logging.getLogger('suds.client').setLevel(logging.DEBUG)
 
-#------ MaxMind Legacy GeoIP API ------  https://github.com/maxmind/GeoIP2-python --- https://github.com/maxmind/geoip-api-python
+#------ MaxMind Legacy and GeoIP2 API's ------  
+# https://github.com/maxmind/GeoIP2-python 
+# https://github.com/maxmind/geoip-api-python
 try:
     import GeoIP
+    import geoip2.database  # GeoIP2
 except OSError:
     pass
 #------ Variables ------
@@ -39,7 +44,7 @@ PythonVer = sys.version_info
 appCurrentPath = os.getcwd()
 appCurrentPath.replace("\/",'\\/')
 appTime = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-appVersion = '0.2.17'
+appVersion = '0.2.18'
 SourcesFound = 0
 OutputDict = []
 OutputJSON = ""
@@ -58,7 +63,6 @@ try:
     varArborVersion = configData['arbor']['version']
     varArborUser = configData['arbor']['user']
     varArborPasswd = configData['arbor']['passwd']
-    varArborCall = configData['arbor']['call']
     varArborWSDL = 'SDKs/' + str(varArborVersion) + '/' + configData['arbor']['wsdl']
     WSDLfile =  appCurrentPath + "/" + varArborWSDL
     if os.path.isfile(WSDLfile):
@@ -78,7 +82,7 @@ try:
     varIdentity_domain = configData['identity']['domain']
     varIdentity_company_type = configData['identity']['company_type']
     varGeoIPDir = configData['geo']['files_path']
-    varRemoteURL = configData['remote']['url']
+    varRemoteURL = configData['remote']
 except ValueError:
     print ("Oops! had a problem with the config file", sys.exc_info()[0])
     sys.exit(0)
@@ -134,21 +138,25 @@ print "                   DDoS Source Information Sharing - Data Collector"
 print "                                    Version: " + appVersion + "\n\n\n"
 print "            Get Updates from: https://github.com/c2theg/DDoS_Infomation_Sharing \r\n\r\n\r\n"
 
-if sys.version_info >= (2,7,9):
-    print "You are running an old version of Python. please upgrade it for this application to run"
-    sys.exit(0)
+#logging.getLogger('urllib3').setLevel(logging.WARNING)
+#logger = logging.getLogger('urllib3').setLevel(logging.WARNING)
+
+if sys.version_info < (2, 7, 9):
+    #urllib3.disable_warnings()
+    #logger.warning('Insecure TLS/SSL detected: upgrade to Python 2.7.9+ to prevent TLS errors')
+    print 'Insecure TLS/SSL detected: upgrade to Python 2.7.9+ to prevent TLS errors'
+    
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
     # Legacy Python that doesn't verify HTTPS certificates by default
-    print "Legacy Python " + str(PythonVer) + " doesn't verify HTTPS certificates by default. Forcing override."
+    print "Legacy Python " + str(PythonVer) + " doesn't verify HTTPS TLS 1.0+ certificates by default."
+    #ssl._create_default_https_context = ssl._create_unverified_context  #SSL fix for python 2.7.6+
     pass
 else:
     # Handle target environment that doesn't support HTTPS verification
     #ssl._create_default_https_context = _create_unverified_https_context
     ssl._create_default_https_context = ssl._create_unverified_context  #SSL fix for python 2.7.6+
-
-    
     
 # Customize these settings:
 #sslverify = True
@@ -176,6 +184,10 @@ if varlocaldebugging == True:
 try:
     geoip_v4    = GeoIP.open(varGeoIPDir + "GeoLiteCity.dat",   GeoIP.GEOIP_MEMORY_CACHE) #GEOIP_STANDARD
     geoip_v6    = GeoIP.open(varGeoIPDir + "GeoLiteCityv6.dat", GeoIP.GEOIP_MEMORY_CACHE)
+    GeoIP2_City     = geoip2.database.Reader(varGeoIPDir + 'GeoLite2-City.mmdb')
+    #GeoIP2_Country  = geoip2.database.Reader(varGeoIPDir + 'GeoLite2-Country.mmdb')
+    
+    #--- Needed as GeoIP2 doesn't offer ASN for free ---
     geoipASN_v4 = GeoIP.open(varGeoIPDir + "GeoIPASNum.dat",    GeoIP.GEOIP_MEMORY_CACHE)
     geoipASN_v6 = GeoIP.open(varGeoIPDir + "GeoIPASNumv6.dat",  GeoIP.GEOIP_MEMORY_CACHE)
 except OSError:
@@ -185,19 +197,25 @@ except OSError:
 print "Waiting " + str(varlocal_wait_before_pull) + " seconds before pulling data from Arbor."
 time.sleep(varlocal_wait_before_pull)
 #-------------------------------------------------------------------------------------------------------------------------
-alertDetailsURL = varArborURL + "/arborws/alerts?api_key=" + varArborKey + "&filter=" + varArgumentReceieved
-alertDetailsResponse = requests.Session()
-alertDetailsResponse = requests.get(alertDetailsURL, timeout=60, verify=False, stream=True)
-alertDetailsResponseRAW = alertDetailsResponse.json()
-#print alertDetailsResponseRAW
 misuseTypes = ''
-for i in alertDetailsResponseRAW:
-    misuseTypes += str(i['misuseTypes'])
-misuseTypes = misuseTypes[1:]  # [u'TCP SYN']
-misuseTypes = misuseTypes[:-1]  # [u'TCP SYN']
-misuseTypes = misuseTypes.replace("u'", "")
-misuseTypes = misuseTypes.replace("'", "")
-#print "Misuse Types: "  + misuseTypes
+try:
+    print "Getting Alert Details... \n\n"
+    alertDetailsURL = varArborURL + "/arborws/alerts?api_key=" + varArborKey + "&filter=" + varArgumentReceieved
+    alertDetailsResponse = requests.Session()
+    alertDetailsResponse = requests.get(alertDetailsURL, timeout=60, verify=False, stream=True)
+    alertDetailsResponseRAW = alertDetailsResponse.json()
+    #print "\n\n Got back: " + str(alertDetailsResponseRAW) + "\n\n"
+
+    for i in alertDetailsResponseRAW:
+        misuseTypes += str(i['misuseTypes'])
+    misuseTypes = misuseTypes[1:]  # [u'TCP SYN']
+    misuseTypes = misuseTypes[:-1]  # [u'TCP SYN']
+    misuseTypes = misuseTypes.replace("u'", "")
+    misuseTypes = misuseTypes.replace("'", "")
+    #print "Misuse Types: "  + misuseTypes
+    
+except OSError:
+    print "Could not fetch Alert Details. " +  sys.exc_info()[0]
 #--------------------------------------------------------------------------------------------------------------------------
 #    mitDetailsURL = varArborURL + "/arborws/mitigations/status?api_key=" + varArborKey + "&filter=" + varArgumentReceieved
 #    mitDetailsResponse = requests.Session()
@@ -212,7 +230,6 @@ try:
     t.urlopener = urllib2.build_opener(t.handler)
     #client = suds.client.Client(url, **kwargs)
     client = suds.client.Client(url='file:///' + WSDLfile, location=varArborURL + '/soap/sp', transport=t)
-    #client = suds.client.Client(url='file:///' + WSDLfile, location=varArborURL + '/soap/sp', transport=t, **kwargs)
     client.set_options(service='PeakflowSPService', port='PeakflowSPPort', cachingpolicy=1) # retxml=false, prettyxml=false   # https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html    
     ArborResultRAW = client.service.getDosAlertDetails(varArgumentReceieved)
     #ArborMitResultRAW = client.service.getMitigationStatisticsByIdXML(varArgumentReceieved)
@@ -358,31 +375,34 @@ try:
                 print "Ignoring CIDR: " + x.id
 
         if varlocaldebugging == True:
-            print "DONE! Found ", SourcesFound, " Sources! \n"
+            print "\n\n Finished generating JSON payload, which containes ", SourcesFound, " DDoS sources! \n\n"
 
-#------------ Send To Info Sharing Provider ------------
-        TempOutputDict_ALL['dis-data'] = OutputDict
-        try:
-            if varlocaldebugging == True:
-                print "Sending the following to: ", varRemoteURL, "\n\n"
-                print json.dumps(TempOutputDict_ALL, indent=4, sort_keys=True, ensure_ascii=False, encoding='latin1')
-        except ValueError:
-            print "Local debugging error: ", sys.exc_info()[0]
-            raise
-
-        try:
-            req = urllib2.Request(varRemoteURL, headers=hdr)
+        #------------ Send To Info Sharing Provider(s) ------------
+        if varRemoteURL is not None:
+            TempOutputDict_ALL['dis-data'] = OutputDict          
             try:
-                page = urllib2.urlopen(req, json.dumps(TempOutputDict_ALL, ensure_ascii=False, encoding='latin1'))
-                content = page.read()
-                print content
-            except urllib2.HTTPError, e:
-                print "Error Fp Read: ", e.fp.read()
-                print "CODE: ", e.code()
-                print "ERROR READ: ",e.read()
-        except ValueError:
-            print "HTTP POST had a problem", sys.exc_info()[0]
-            raise
+                if varlocaldebugging == True:
+                    print "Sending the following: \n"
+                    print json.dumps(TempOutputDict_ALL, indent=4, sort_keys=True, ensure_ascii=False, encoding='latin1')
+            except ValueError:
+                print "Local debugging error: ", sys.exc_info()[0]
+                raise
+            for i in configData['remote']:
+                print "\n"
+                try:
+                    print "Sending data to: " + i['label'] + " (" + i['url'] + ")... \n"
+                    req = urllib2.Request(i['url'], headers=hdr)
+                    try:
+                        page = urllib2.urlopen(req, json.dumps(TempOutputDict_ALL, ensure_ascii=False, encoding='latin1'))
+                        content = page.read()
+                        print content
+                    except urllib2.HTTPError, e:
+                        print "Error Fp Read: ", e.fp.read()
+                        print "CODE: ", e.code()
+                        print "ERROR READ: ",e.read()
+                except ValueError:
+                    print "HTTP POST had a problem", sys.exc_info()[0]
+                    raise
 
         try:
             if varlocal_log_to_file == True:
