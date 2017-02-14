@@ -8,7 +8,12 @@
         "wait_before_pull": 2,
         "timezone":     "America/New_York",
         "syslog_trigger_on": ", is now done,",
-        "source_collector": "getSources.py"
+        "source_collector": "getSources.py",
+        "proxy":            false,
+        "proxy_username":   "",
+        "proxy_passwd":     "",
+        "proxy_url":        "",
+        "proxy_port":       ""        
     },
     "email": {
         "server":   "mailrelay.server.com",
