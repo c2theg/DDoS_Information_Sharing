@@ -57,36 +57,6 @@ newFile="GeoLite2-City.mmdb"
 #http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz
 
 download "" $file $newFile
-#---------------------------- GeoIP2 Lite Country ----------------------------------------
-file="GeoLite2-Country.mmdb.gz"
-newFile="GeoLite2-Country.mmdb"
-#http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz
-
-download "" $file $newFile
-#---------------------------- Country ----------------------------------------
-file="GeoIP.dat.gz"
-newFile="GeoIP.dat"
-#http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz
-
-download "/GeoLiteCountry/" $file $newFile
-#--------------------------------------------------------------------
-file="GeoIPv6.dat.gz"
-newFile="GeoIPv6.dat"
-#http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz
-
-download "" $file $newFile
-#---------------------------- CITY ----------------------------------------
-file="GeoLiteCity.dat.gz"
-newFile="GeoLiteCity.dat"
-#http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
-
-download "" $file $newFile
-#--------------------------------------------------------------------
-file="GeoLiteCityv6.dat.gz"
-newFile="GeoLiteCityv6.dat"
-#http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz
-
-download "GeoLiteCityv6-beta/" $file $newFile
 #------------------------- ASN -------------------------------------------
 file="GeoIPASNum.dat.gz"
 newFile="GeoIPASNum.dat"
