@@ -10,33 +10,31 @@
 from socket import *
 from io import StringIO
 from datetime import datetime
-import errno, sys, json, os, time, logging, argparse, base64, ssl, re, string
-import requests, certifi
-import urllib, urllib2, urllib3
-#urllib3.disable_warnings()
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
-#from sslcontext import create_ssl_context, HTTPSTransport
+import errno, sys, json, os, time, logging, argparse, base64, ssl, re, string, inspect
+import urllib2
+#from pprint import pprint
 #------- Suds ------- 
-# https://pypi.python.org/pypi/suds 
+# https://pypi.python.org/pypi/suds
 # https://pypi.python.org/pypi/suds-jurko/0.6
 # https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html
 # https://bitbucket.org/jurko/suds
 import suds
 import suds.client
-#logging.basicConfig(level=logging.INFO)
-#from suds.client import Client
-#logging.getLogger('suds.client').setLevel(logging.DEBUG)
-
 #------ MaxMind Legacy and GeoIP2 API's ------  
-# https://github.com/maxmind/GeoIP2-python 
-# https://github.com/maxmind/geoip-api-python
 try:
-    import GeoIP
-    import geoip2.database  # GeoIP2
+    import GeoIP # https://github.com/maxmind/geoip-api-python
+    import geoip2.database  # GeoIP2 - https://github.com/maxmind/GeoIP2-python 
 except OSError:
     pass
+#---- Custom Libraries ----
+# Add current dir to search path.
+#sys.path.insert(0, "libraries")
+#pprint(sys.path)
+#import func_REST
+from func_REST import *
+#from libraries.func_REST import *
+#import func_REST
+cls_http = HTTP_Classes()  # instantiate HTTP REST class
 #------ Variables ------
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -44,7 +42,7 @@ PythonVer = sys.version_info
 appCurrentPath = os.getcwd()
 appCurrentPath.replace("\/",'\\/')
 appTime = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-appVersion = '0.2.18'
+appVersion = '0.2.22'
 SourcesFound = 0
 OutputDict = []
 OutputJSON = ""
@@ -138,12 +136,7 @@ print "                   DDoS Source Information Sharing - Data Collector"
 print "                                    Version: " + appVersion + "\n\n\n"
 print "            Get Updates from: https://github.com/c2theg/DDoS_Infomation_Sharing \r\n\r\n\r\n"
 
-#logging.getLogger('urllib3').setLevel(logging.WARNING)
-#logger = logging.getLogger('urllib3').setLevel(logging.WARNING)
-
 if sys.version_info < (2, 7, 9):
-    #urllib3.disable_warnings()
-    #logger.warning('Insecure TLS/SSL detected: upgrade to Python 2.7.9+ to prevent TLS errors')
     print 'Insecure TLS/SSL detected: upgrade to Python 2.7.9+ to prevent TLS errors'
     
 try:
@@ -157,39 +150,16 @@ else:
     # Handle target environment that doesn't support HTTPS verification
     #ssl._create_default_https_context = _create_unverified_https_context
     ssl._create_default_https_context = ssl._create_unverified_context  #SSL fix for python 2.7.6+
-    
-# Customize these settings:
-#sslverify = True
-#cafile = None
-#capath = None
 
-#kwargs = {}
-#sslContext = create_ssl_context(sslverify, cafile, capath)
-#kwargs['transport'] = HTTPSTransport(sslContext)
-
-    
-hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36',
-       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-       'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-       'Accept-Encoding': 'none',
-       'Accept-Language': 'en-US,en;q=0.8',
-       'Content-Type': 'application/json',
-       'Connection': 'keep-alive'}
 page = ''
 #-------------- Get the GeoIP Database file ------------------------------------------------------------------------------
 print 'This product includes GeoLite2 data created by MaxMind, available from <a href="http://www.maxmind.com">http://www.maxmind.com</a>.'
 if varlocaldebugging == True:
-    print "Loading the following Maxmind GeoIP database from path: " + varGeoIPDir + ", GeoLiteCity.dat, GeoLiteCityv6.dat, GeoIPASNum.dat, GeoIPASNumv6.dat \n\n"    
-    #-- https://dev.maxmind.com/geoip/legacy/geolite/
+    print "Loading the following Maxmind GeoIP database from path: " + varGeoIPDir + ", GeoLite2-City.mmdb, GeoIPASNum.dat, GeoIPASNumv6.dat \n\n"    
 try:
-    geoip_v4    = GeoIP.open(varGeoIPDir + "GeoLiteCity.dat",   GeoIP.GEOIP_MEMORY_CACHE) #GEOIP_STANDARD
-    geoip_v6    = GeoIP.open(varGeoIPDir + "GeoLiteCityv6.dat", GeoIP.GEOIP_MEMORY_CACHE)
-    GeoIP2_City     = geoip2.database.Reader(varGeoIPDir + 'GeoLite2-City.mmdb')
-    #GeoIP2_Country  = geoip2.database.Reader(varGeoIPDir + 'GeoLite2-Country.mmdb')
-    
-    #--- Needed as GeoIP2 doesn't offer ASN for free ---
-    geoipASN_v4 = GeoIP.open(varGeoIPDir + "GeoIPASNum.dat",    GeoIP.GEOIP_MEMORY_CACHE)
-    geoipASN_v6 = GeoIP.open(varGeoIPDir + "GeoIPASNumv6.dat",  GeoIP.GEOIP_MEMORY_CACHE)
+    geoIP2_City     = geoip2.database.Reader(varGeoIPDir + 'GeoLite2-City.mmdb')
+    geoipASN_v4     = GeoIP.open(varGeoIPDir + "GeoIPASNum.dat",    GeoIP.GEOIP_MEMORY_CACHE) #--- Needed as GeoIP2 doesn't offer ASN for free ---
+    geoipASN_v6     = GeoIP.open(varGeoIPDir + "GeoIPASNumv6.dat",  GeoIP.GEOIP_MEMORY_CACHE)
 except OSError:
     print "Could not load GeoIP file(s)! Please run \n"
     sys.exit(0)
@@ -199,12 +169,7 @@ time.sleep(varlocal_wait_before_pull)
 #-------------------------------------------------------------------------------------------------------------------------
 misuseTypes = ''
 try:
-    print "Getting Alert Details... \n\n"
-    alertDetailsURL = varArborURL + "/arborws/alerts?api_key=" + varArborKey + "&filter=" + varArgumentReceieved
-    alertDetailsResponse = requests.Session()
-    alertDetailsResponse = requests.get(alertDetailsURL, timeout=60, verify=False, stream=True)
-    alertDetailsResponseRAW = alertDetailsResponse.json()
-    #print "\n\n Got back: " + str(alertDetailsResponseRAW) + "\n\n"
+    alertDetailsResponseRAW = cls_http.HTTP_GET_rjson( str(varArborURL + "/arborws/alerts?api_key=" + varArborKey + "&filter=" + varArgumentReceieved) )
 
     for i in alertDetailsResponseRAW:
         misuseTypes += str(i['misuseTypes'])
@@ -212,15 +177,20 @@ try:
     misuseTypes = misuseTypes[:-1]  # [u'TCP SYN']
     misuseTypes = misuseTypes.replace("u'", "")
     misuseTypes = misuseTypes.replace("'", "")
-    #print "Misuse Types: "  + misuseTypes
+    print "Misuse Type(s): "  + misuseTypes
     
 except OSError:
     print "Could not fetch Alert Details. " +  sys.exc_info()[0]
 #--------------------------------------------------------------------------------------------------------------------------
-#    mitDetailsURL = varArborURL + "/arborws/mitigations/status?api_key=" + varArborKey + "&filter=" + varArgumentReceieved
-#    mitDetailsResponse = requests.Session()
-#    mitDetailsResponse = requests.get(mitDetailsURL, timeout=60, verify=False, stream=True)
-#    mitDetailsResponseRAW = mitDetailsResponse.json()
+'''
+try:
+    print "getting mitigation data... "
+    mitDetailsResponseRAW = cls_http.HTTP_GET_rjson( str(varArborURL + "/arborws/mitigations/status?api_key=" + varArborKey + "&filter=" + varArgumentReceieved), 0)
+    print "mitDetailsResponseRAW: " 
+    print json.dumps(mitDetailsResponseRAW, indent=4, sort_keys=True, ensure_ascii=False, encoding='latin1')
+except OSError:
+    print "Could not fetch Alert Details. " +  sys.exc_info()[0]
+'''
 #--------------------------------------------------------------------------------------------------------------------------
 if varlocaldebugging == True:
     print "\n\n\n Connecting to:",varArborURL," User: ",varArborUser, " WSDL: " + WSDLfile
@@ -228,7 +198,6 @@ try:
     t = suds.transport.https.HttpAuthenticated(username=varArborUser, password=varArborPasswd)
     t.handler = urllib2.HTTPDigestAuthHandler(t.pm)
     t.urlopener = urllib2.build_opener(t.handler)
-    #client = suds.client.Client(url, **kwargs)
     client = suds.client.Client(url='file:///' + WSDLfile, location=varArborURL + '/soap/sp', transport=t)
     client.set_options(service='PeakflowSPService', port='PeakflowSPPort', cachingpolicy=1) # retxml=false, prettyxml=false   # https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html    
     ArborResultRAW = client.service.getDosAlertDetails(varArgumentReceieved)
@@ -252,8 +221,9 @@ try:
         TempOutputDict_ALL['ProviderName'] = varIdentity_name
         TempOutputDict_ALL['ProviderASN'] = varIdentity_asn
         TempOutputDict_ALL['company_type'] = varIdentity_company_type
+
         for x in Sources:
-            if '/32' in x.id:
+            if ('/32' in x.id or '/128' in x.id):
                 if x.net.bps != 0:
                     if x.net.pps != 0:
                         #print "IP Address: ", x.id, "BPS: ", x.net.bps, "PPS: ", x.net.pps
@@ -262,11 +232,13 @@ try:
                         CleanIP = x.id.split("/")[0]                    
                         TempOutputDict['IPaddress'] = CleanIP
                         #---- do GeoIP Lookup ----------
-                        #print " (IPv4) "
-                        gir = geoip_v4.record_by_addr(CleanIP)
+                        gir = geoIP2_City.city(CleanIP)
                         if gir is not None:
                             #------------ ASN ---------
-                            girASN = geoipASN_v4.org_by_addr(CleanIP)
+                            if ':' in x.id:  # this is a IPv6 Address
+                                girASN = geoipASN_v6.org_by_addr(CleanIP)
+                            else:
+                                girASN = geoipASN_v4.org_by_addr(CleanIP)
                             #print "ASN: " + str(girASN)   # AS16509 Amazon.com, Inc.
                             if girASN is not None:
                                 try:
@@ -280,89 +252,30 @@ try:
                                 ASN_Number = 0
                                 ASN_Name = "na"
                             #---------- Generate Output ---------------------------------------------
-                            if gir['city'] is not None:
-                                TempOutputDict['City'] = str(gir['city']).decode('utf-8', 'ignore')
+                            if gir.city.name is not None:
+                                TempOutputDict['City'] = str(gir.city.name).decode('utf-8', 'ignore')
                             else:
                                 TempOutputDict['City'] = "na"
                                 
-                            if gir['region'] is not None:
-                                TempOutputDict['State'] = unicode(gir['region'], "utf-8")
+                            if gir.subdivisions.most_specific.iso_code is not None:
+                                TempOutputDict['State'] = str(gir.subdivisions.most_specific.iso_code).decode("utf-8", 'ignore')
                             else:
                                 TempOutputDict['State'] = "na"
 
-                            if gir['country_code'] is not None:
-                                TempOutputDict['Country'] = unicode(gir['country_code'], "utf-8")
+                            if gir.country.iso_code is not None:
+                                TempOutputDict['Country'] = str(gir.country.iso_code).decode("utf-8", 'ignore') # 'US'
                             else:
                                 TempOutputDict['Country'] = "na"
 
-                            #TempOutputDict['latitude'] = gir['latitude']
-                            #TempOutputDict['longitude'] = gir['longitude']
-                            TempOutputDict['Extra'] = str(gir['latitude']) + "," + str(gir['longitude'])
+                            #TempOutputDict['latitude'] = gir.location.latitude
+                            #TempOutputDict['longitude'] = gir.location.longitude
+                            TempOutputDict['Extra'] = str(gir.location.latitude) + "," + str(gir.location.longitude)
                             TempOutputDict['TotalBPS'] = x.net.bps
                             TempOutputDict['TotalPPS'] = x.net.pps
                             TempOutputDict['SourceASN'] = ASN_Number
                             TempOutputDict['SourceASNName'] = ASN_Name 
                             TempOutputDict['AttackType'] = misuseTypes
-                            OutputDict.append(TempOutputDict)
-                        else:
-                            if varlocaldebugging == True:
-                                print "GeoIP came back empty for IP: " + CleanIP
-                    
-                    #--- Clear temp variables ---
-                    TempOutputDict = None
-                    gir = None
-                    girASN = None
-
-            elif '/128' in x.id:
-                if x.net.bps != 0:
-                    if x.net.pps != 0:
-                        #print "IP Address: ", x.id, "BPS: ", x.net.bps, "PPS: ", x.net.pps
-                        SourcesFound += 1
-                        TempOutputDict = {}
-                        CleanIP = x.id.split("/")[0]
-                        TempOutputDict['IPaddress'] = CleanIP
-                        #---- do GeoIP Lookup ----------  
-                        #print " (IPv6) "
-                        gir = geoip_v6.record_by_addr(CleanIP)
-                        if gir is not None:
-                            #------------ ASN ---------
-                            girASN = geoipASN_v6.org_by_addr(CleanIP)
-                            #print "ASN: " + str(girASN)   # AS16509 Amazon.com, Inc.
-                            if girASN is not None:
-                                try:
-                                    ASN_Number = girASN.split(' ', 1)[0] # AS36351
-                                    ASN_Number = ASN_Number[2:]
-                                    ASN_Name = girASN.split(' ', 1)[1]   # Amazon.com, Inc.
-                                    ASN_Name = re.sub('[ ](?=[ ])|[^-_,A-Za-z0-9. ]+', '', ASN_Name)
-                                except ValueError:
-                                    raise
-                            else:
-                                ASN_Number = 0
-                                ASN_Name = "na"
-                            #---------- Generate Output ---------------------------------------------
-                            if gir['city'] is not None:
-                                TempOutputDict['City'] = str(gir['city']).decode('utf-8', 'ignore')
-                            else:
-                                TempOutputDict['City'] = "na"
-                                
-                            if gir['region'] is not None:
-                                TempOutputDict['State'] = unicode(gir['region'], "utf-8")
-                            else:
-                                TempOutputDict['State'] = "na"
-
-                            if gir['country_code'] is not None:
-                                TempOutputDict['Country'] = unicode(gir['country_code'], "utf-8")
-                            else:
-                                TempOutputDict['Country'] = "na"
-
-                            #TempOutputDict['latitude'] = gir['latitude']
-                            #TempOutputDict['longitude'] = gir['longitude']
-                            TempOutputDict['Extra'] = str(gir['latitude']) + "," + str(gir['longitude'])
-                            TempOutputDict['TotalBPS'] = x.net.bps
-                            TempOutputDict['TotalPPS'] = x.net.pps
-                            TempOutputDict['SourceASN'] = ASN_Number
-                            TempOutputDict['SourceASNName'] = ASN_Name
-                            TempOutputDict['AttackType'] = misuseTypes
+                            #print "Work on: " + TempOutputDict
                             OutputDict.append(TempOutputDict)
                         else:
                             if varlocaldebugging == True:
@@ -373,6 +286,8 @@ try:
                     girASN = None
             else:
                 print "Ignoring CIDR: " + x.id
+
+        geoIP2_City.close()
 
         if varlocaldebugging == True:
             print "\n\n Finished generating JSON payload, which containes ", SourcesFound, " DDoS sources! \n\n"
@@ -387,23 +302,12 @@ try:
             except ValueError:
                 print "Local debugging error: ", sys.exc_info()[0]
                 raise
+
             for i in configData['remote']:
                 print "\n"
-                try:
-                    print "Sending data to: " + i['label'] + " (" + i['url'] + ")... \n"
-                    req = urllib2.Request(i['url'], headers=hdr)
-                    try:
-                        page = urllib2.urlopen(req, json.dumps(TempOutputDict_ALL, ensure_ascii=False, encoding='latin1'))
-                        content = page.read()
-                        print content
-                    except urllib2.HTTPError, e:
-                        print "Error Fp Read: ", e.fp.read()
-                        print "CODE: ", e.code()
-                        print "ERROR READ: ",e.read()
-                except ValueError:
-                    print "HTTP POST had a problem", sys.exc_info()[0]
-                    raise
-
+                ProviderResponse = cls_http.HTTP_POST_SendJson(i['url'], TempOutputDict_ALL)
+                if varlocaldebugging == True:
+                    print ProviderResponse
         try:
             if varlocal_log_to_file == True:
                 print "logging to file... "
