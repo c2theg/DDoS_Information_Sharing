@@ -21,18 +21,18 @@ echo " "
 echo " "
 echo "---------------------------------------------------------------------------------------------------------------"
 # -- add newer python 2.7.x repo --
-sudo add-apt-repository -y ppa:fkrull/deadsnakes-python2.7
+sudo -E add-apt-repository -y ppa:fkrull/deadsnakes-python2.7
 wait
-sudo apt-get update
+sudo -E apt-get update
 wait
-sudo apt-get -y upgrade
+sudo -E apt-get -y upgrade
 wait
 #-- Upgrade to latest Kernal --
-sudo apt-get -y dist-upgrade
+sudo -E apt-get -y dist-upgrade
 wait
-sudo apt-get install -y ntp ntpdate ssh openssh-server openssl libssl-dev whois traceroute htop
+sudo -E apt-get install -y ntp ntpdate ssh openssh-server openssl libssl-dev whois traceroute htop
 wait
-sudo apt-get install -y python-software-properties python python-pip python-dev python2.7
+sudo -E apt-get install -y python-software-properties python python-pip python-dev python2.7
 wait
 #---- install python dependancies ----
 #-- suds --
@@ -49,24 +49,23 @@ sudo pip --upgrade install
 wait
 #-- GeoIP --
 # https://pypi.python.org/pypi/geoip2
-sudo apt-cache search geoip
+sudo -E apt-cache search geoip
 sudo apt-get install -y libgeoip-dev
 sudo apt-get install -y python-geoip
 wait
-sudo pip install geoip2
+sudo -E pip install geoip2
 sudo pip install GeoIP
 sudo pip install python-geoip-geolite2
 wait
 #----- others ---
 sudo pip install requests
 sudo pip install --upgrade requests
-sudo easy_install hashlib
-sudo pip install certifi
-sudo pip install urllib3[secure]
-sudo pip install 'requests[security]'
+#sudo easy_install hashlib
+#sudo pip install certifi
+#sudo pip install urllib3[secure]
+#sudo pip install 'requests[security]'
 #----- Done -----
-echo $MyPath
-sudo chmod -R +x .
+sudo chmod -R u+x .
 # sudo chmod -R 755 . && sudo chown -R ubuntu:ubuntu .
 wait
 #------ Make Directory structures -----
