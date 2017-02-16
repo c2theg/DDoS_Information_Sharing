@@ -44,15 +44,27 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
                     https://github.com/c2theg/DDoS_Infomation_Sharing
                     
 ------------------------------------------------------------------------------------------------
+    0) TL;DR:  - Gimme Gimme Gimme 
     1) Collector application
     2) GetSources application 
     3) Client Config
     4) Arbor SP config
     5) CableLabs - Crits message information    
     6) General Info
-    7) Copyright notice
+    7) Copyright Notice
     8) References
+
 ------------------------------------------------------------------------------------------------
+    0) TL;DR:  - Gimme Gimme Gimme
+        1) Unfortunately you have to setup the config.json file first. It's not hard, just a few values need to be changed, which are documented in Section 3.
+    
+        2) When you're done with that, and you setup Arbor SP (Section 4) to send the syslog traffic to your server, just run this command
+        
+            sudo chmod u+x ./initial_start.sh && ./initial_start.sh
+    
+        DONE! Wasn't that easy?!?!
+        Ok now that it's all done and running, move on to read the rest. (Please) 
+------------------------------------------------------------------------------------------------ 
     1) Collector application
     
         Collector.py is a syslog collector that was written to look for specific logs from Arbor SP. In the future it will be expanded to work for other vendors. 
