@@ -42,11 +42,13 @@ PythonVer = sys.version_info
 appCurrentPath = os.getcwd()
 appCurrentPath.replace("\/",'\\/')
 appTime = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-appVersion = '0.2.22'
+appVersion = '0.2.23'
 SourcesFound = 0
 OutputDict = []
 OutputJSON = ""
 SendData = []
+app_hostname = socket.getfqdn()
+print "Hostname: " + app_hostname
 #---- Import Config ----- 
 try:
     ConfigFilePath = appCurrentPath + '/config.json'
@@ -55,12 +57,16 @@ try:
         configData = json.load(data_file)
         #----------------------------------------
     #print "Config Data: ", configData
+    varUpdate_auto = configData['local']['auto_updates']
+    varUpdate_url = configData['local']['updates_url']
+    varUpdate_checkEvery = configData['local']['update_checkEvery']
+    #-----------------------------------------------------------------
     varArborURL = 'https://' + configData['arbor']['url']
     varArborPort = configData['arbor']['port']
     varArborKey = configData['arbor']['key']
     varArborVersion = configData['arbor']['version']
     varArborUser = configData['arbor']['user']
-    varArborPasswd = configData['arbor']['passwd']
+    varArborPasswd = configData['arbor']['zone_secret']
     varArborWSDL = 'SDKs/' + str(varArborVersion) + '/' + configData['arbor']['wsdl']
     WSDLfile =  appCurrentPath + "/" + varArborWSDL
     if os.path.isfile(WSDLfile):
@@ -68,7 +74,7 @@ try:
     else:
         print "WSDL file (", WSDLfile, ") DOES NOT exist! Please download the Arbor SDK and put the WSDL in the correct location under SDKs/<Version>/  and make sure its set correctly in config.json"
         sys.exit(0)
-    #--------------------------------------------------------------
+    #-----------------------------------------------------------------
     varlocaltimezone = configData['local']['timezone']
     varlocaldebugging = configData['local']['output_debug']
     varLogFile = configData['local']['log_file']
@@ -81,6 +87,8 @@ try:
     varIdentity_company_type = configData['identity']['company_type']
     varGeoIPDir = configData['geo']['files_path']
     varRemoteURL = configData['remote']
+
+
 except ValueError:
     print ("Oops! had a problem with the config file", sys.exc_info()[0])
     sys.exit(0)
@@ -193,7 +201,7 @@ except OSError:
 '''
 #--------------------------------------------------------------------------------------------------------------------------
 if varlocaldebugging == True:
-    print "\n\n\n Connecting to:",varArborURL," User: ",varArborUser, " WSDL: " + WSDLfile
+    print "Connecting to:",varArborURL," User: ",varArborUser, " WSDL: " + WSDLfile
 try:
     t = suds.transport.https.HttpAuthenticated(username=varArborUser, password=varArborPasswd)
     t.handler = urllib2.HTTPDigestAuthHandler(t.pm)
