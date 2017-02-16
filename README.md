@@ -1,19 +1,22 @@
 # DDoS_Infomation_Sharing
 Carrier Grade DDoS Information Sharing
 
-This was built to interface with Arbor SP 7.6, but will be updated over time to include newer versions as well as other vendors.
+This was built to interface with Arbor SP 7.6, but will be updated over time to include newer versions as well as other vendors. 
+#
+#
 
-
- _____ _       _     _           _              _____    __    _____
-|     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _
-|   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
-|_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
-                            |_|                                             |___|
-                                      __
-                                     / _|___
-                                     > _|_ _|
-                                     \_____|
-
+                                                                                     
+     _____ _       _     _           _              _____    __    _____             
+    |     | |_ ___|_|___| |_ ___ ___| |_ ___ ___   |     |__|  |  |   __|___ ___ _ _ 
+    |   --|   |  _| |_ -|  _| . | . |   | -_|  _|  | | | |  |  |  |  |  |  _| .'| | |
+    |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
+                                |_|                                             |___|
+                                          ___   
+                                         ( _ )  
+                                         / _ \/\
+                                        | (_>  <
+                                         \___/\/
+                                                
                       ___            _     _   ___ _
                      |   \ __ _ _ _ (_)___| | | _ \ |_  __ _ _ _
                      | |) / _` | ' \| / -_) | |  _/ ' \/ _` | ' \
