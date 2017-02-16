@@ -51,6 +51,7 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
     5) CableLabs - Crits message information    
     6) General Info
     7) Copyright notice
+    8) References
 ------------------------------------------------------------------------------------------------
     1) Collector application
     
@@ -272,3 +273,9 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
         Many other Companies/Employees have helped to make this possible. 
         I will update this documentation with those who would like to be named, contact information. 
         
+------------------------------------------------------------------------------------------------
+    8) References
+    
+        Cable Labs 
+            https://cablelabs.github.io/ddos-info-sharing/
+            https://dis-demo.cablelabs.com/ips/list/        
