@@ -1,19 +1,22 @@
 {
     "local": {
-        "syslog_port":  1069,
-        "syslog_proto": "udp",
-        "output_debug": true,
-        "log_to_file":  false,
-        "log_file":     "/var/log/ddos_infosharing_log.txt",
-        "wait_before_pull": 2,
-        "timezone":     "America/New_York",
+        "syslog_port":  	 1069,
+        "syslog_proto": 	 "udp",
+        "output_debug": 	 false,
+        "log_to_file":  	 false,
+        "log_file":     	 "/var/log/ddos_infosharing_log.txt",
+        "wait_before_pull":  2,
+        "timezone":     	 "America/New_York",
         "syslog_trigger_on": ", is now done,",
-        "source_collector": "getSources.py",
-        "proxy":            false,
-        "proxy_username":   "",
-        "proxy_passwd":     "",
-        "proxy_url":        "",
-        "proxy_port":       ""        
+        "source_collector":  "getSources.py",
+        "proxy":             false,
+        "proxy_username":    "",
+        "proxy_passwd":      "",
+        "proxy_url":         "",
+        "proxy_port":        "",
+        "auto_updates":		 false,
+        "updates_url":		 "https://github.com/c2theg/DDoS_Infomation_Sharing/archive/master.zip",
+        "update_checkEvery": "5d"
     },
     "email": {
         "server":   "mailrelay.server.com",
@@ -27,20 +30,20 @@
         "bcc":      ""
     },
     "remote": [ 
-    	{"url": "https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "extra": "" }    	
+    	{"url": "https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "format": "json", "send_infoshare": true, "send_alert": false, "send_mit": false, "extra": "" }
     ],
 	"geo": {
-        "files_path": "libraries/maxmind/",
-        "update_url": "http://dev.maxmind.com/geoip/legacy/geolite/"
-    },    
+        "files_path": 	"libraries/maxmind/",
+        "update_url": 	"http://dev.maxmind.com/geoip/legacy/geolite/"
+    },
     "arbor": {
-        "url":      "192.168.1.2",
-        "port":     443,
-        "key":      "<ARBOR_KEY>",
-        "version":  7.6,
-        "user":     "arbor",
-        "passwd":   "<PASSWORD>",
-        "wsdl":     "PeakflowSP.wsdl"
+        "url":      	"10.1.1.1",
+        "port":     	443,
+        "key":      	"<ARBOR_KEY>",
+        "version":  	7.6,
+        "user":     	"arbor",
+        "zone_secret":  "<PASSWORD>",
+        "wsdl":     	"PeakflowSP.wsdl"
     },
     "identity": {
         "company_type": "isp",
