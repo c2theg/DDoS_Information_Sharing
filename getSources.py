@@ -7,7 +7,8 @@
 #--- Force Python2 as Suds doesn't support Python3 fully as of 11/10/2016
 #This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
 #Inital: 12/23/16  Updated: 2/5/17
-from socket import *
+#from socket import *
+import socket
 from io import StringIO
 from datetime import datetime
 import errno, sys, json, os, time, logging, argparse, base64, ssl, re, string, inspect
