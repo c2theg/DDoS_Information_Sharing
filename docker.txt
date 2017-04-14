@@ -1,0 +1,46 @@
+#In the host OS add docker:
+	sudo apt-get install docker.io
+
+#Start docker if it’s not started
+	sudo service docker start
+
+#Create a docker network
+	sudo docker network create —subnet 10.0.0.0/24 ddos-info-sharing
+
+#Create a new docker container and run it
+	docker run —name ddos-info-sharing --hostname=ddos-info-sharing --net ddos-info-sharing --ip 10.0.0.2 -t -i ubuntu:14.04
+
+#You should now be in the docker.  Check your hostname to make sure. 
+#Add git to the container
+	apt-get –y install git
+
+#put the files in opt 
+	cd /opt/
+
+#clone your git repository
+	git clone https://github.com/c2theg/DDoS_Infomation_Sharing
+
+#go into the new repository
+	cd DDoS_Information_Sharing
+
+#change the permissions on the initial_start.sh file
+	chmod 755 initial_start.sh
+
+#startit!
+	./initial_start.sh
+
+#to run the collector.py app all the time I think you do this:
+#Install supervisor
+	apt-get install supervisor
+
+#create a supervisor config file
+	cat > /etc/supervisor/conf.d/collector.conf<<EOF
+	command=python /opt/DDoS_Infomation_Sharing/collector.py
+	stdout_events_enabled=true
+	stderr_events_enabled=true
+	autostart=true
+	autorestart=true
+	EOF
+
+#and then restart supervisor
+	service supervisor restart
