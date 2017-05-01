@@ -1,15 +1,16 @@
 {
     "local": {
+	"default_vendor":    	"arbor",
         "syslog_port":  	 1512,
         "syslog_proto": 	 "udp",
         "output_debug": 	 false,
         "log_to_file":  	 false,
         "log_file":     	 "/var/log/ddos_infosharing_log.txt",
-        "wait_before_pull":  2,
+        "wait_before_pull":  	 2,
         "timezone":     	 "America/New_York",
-        "syslog_trigger_on": ", is now done,",
-        "source_collector":  "getSources.py",
-        "proxy":             false,
+        "syslog_trigger_on": 	 ", is now done,",
+        "source_collector":  	 "getSources.py",
+        "proxy":             	 false,
         "proxy_username":    "",
         "proxy_passwd":      "",
         "proxy_url":         "",
@@ -46,7 +47,8 @@
         "version":  	       7.6,
         "user":     	       "arbor",
         "zone_secret":         "<PASSWORD>",
-        "wsdl":     	       "PeakflowSP.wsdl"
+        "wsdl":     	       "PeakflowSP.wsdl",
+        "data_collector":      "getSources.py"	    
     },
     "radware": {
         "syslog_trigger_on":   " done ",
@@ -56,7 +58,8 @@
         "port":                443,
         "version":             3.8,
         "user":                "radware",
-        "password":            "<PASSWORD>"
+        "password":            "<PASSWORD>",
+        "data_collector":      "getSources.py"	    
     },
     "a10": {
         "syslog_trigger_on":   " done ",
@@ -66,7 +69,8 @@
         "port":                443,
         "version":             4.2,
         "user":                "a10",
-        "password":            "<PASSWORD>"
+        "password":            "<PASSWORD>",
+        "data_collector":      "getSources.py"	    
     },
     "f5": {
         "syslog_trigger_on":   " done ",
@@ -76,7 +80,8 @@
         "port":                443,
         "version":             12.2,
         "user":                "admin",
-        "password":            "<PASSWORD>"
+        "password":            "<PASSWORD>",
+        "data_collector":      "getSources.py"	    
     },       
     "identity": {
         "company_type": "isp",
