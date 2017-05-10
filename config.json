@@ -18,7 +18,7 @@
         "proxy_port":       "",
         "auto_updates":     false,
         "updates_url":      "https://github.com/c2theg/DDoS_Infomation_Sharing/archive/master.zip",
-        "update_checkEvery":"5d"
+        "update_checkEvery": 5
     },
     "email": {
         "enabled":  false,
