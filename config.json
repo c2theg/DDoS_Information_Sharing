@@ -7,18 +7,18 @@
         "callback_url": ""
     },
     "local": {
-        "default_vendor":    "arbor",
-        "output_debug": 	 false,       
-        "wait_before_pull":  2,
-        "timezone":     	 "America/New_York",
-        "proxy":             false,
-        "proxy_username":    "",
-        "proxy_passwd":      "",
-        "proxy_url":         "",
-        "proxy_port":        "",
-        "auto_updates":		 false,
-        "updates_url":		 "https://github.com/c2theg/DDoS_Infomation_Sharing/archive/master.zip",
-        "update_checkEvery": "5d"
+        "default_vendor":   "arbor",
+        "output_debug":     false,
+        "wait_before_pull": 2,
+        "timezone":         "America/New_York",
+        "proxy":            false,
+        "proxy_username":   "",
+        "proxy_passwd":     "",
+        "proxy_url":        "",
+        "proxy_port":       "",
+        "auto_updates":     false,
+        "updates_url":      "https://github.com/c2theg/DDoS_Infomation_Sharing/archive/master.zip",
+        "update_checkEvery":"5d"
     },
     "email": {
         "enabled":  false,
@@ -34,25 +34,25 @@
         { "to": "admin@carrier.com", "name": "Jane Doe", "cc":"", "bcc": "", "send_info": false, "send_errors": false }
     ],
     "remote": [ 
-    	{ "url": "https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "format": "json", "send_infosharing": true, "send_details": false, "timeout": 120, "extra": "", "proto": "tcp" }
+        { "url": "https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "format": "json", "send_infosharing": true, "send_details": false, "timeout": 120, "extra": "", "proto": "tcp" }
     ],
-	"geo": {
-	    "enabled_forSending":      false,
-	    "enabled_forReceiving":    true,
-        "files_path": 	           "libraries/maxmind/",
-        "update_url": 	           "http://dev.maxmind.com/geoip/legacy/geolite/"
+    "geo": {
+        "enabled_forSending":      false,
+        "enabled_forReceiving":    true,
+        "files_path":              "libraries/maxmind/",
+        "update_url":              "http://dev.maxmind.com/geoip/legacy/geolite/"
     },
     "arbor": {
         "version":             7.6,   
         "syslog_trigger_on":   ", is now done,",
         "syslog_port":         1512,
         "syslog_proto":        "udp",    
-        "url":      	       "10.1.1.1",
-        "port":     	       443,
-        "key":      	       "<ARBOR_KEY>",
-        "user":     	       "arbor",
+        "url":                 "10.1.1.1",
+        "port":                443,
+        "key":                 "<ARBOR_KEY>",
+        "user":                "arbor",
         "zone_secret":         "<PASSWORD>",
-        "wsdl":     	       "PeakflowSP.wsdl",
+        "wsdl":                "PeakflowSP.wsdl",
         "source_collector":    "getSources.py",
         "log_to_file":         false,
         "log_file":            "/var/log/ddos_infosharing_arbor_log.txt",
@@ -88,7 +88,7 @@
     },
     "f5": {
         "version":             12.2,
-        "syslog_trigger_on":   " attack is over ",
+        "syslog_trigger_on":   " Attack Stopped ",
         "syslog_port":         1515,
         "syslog_proto":        "udp",    
         "url":                 "10.1.1.1",
