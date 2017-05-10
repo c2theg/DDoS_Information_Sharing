@@ -1,0 +1,103 @@
+{
+    "identity": {
+        "company_type": "isp",
+        "name":         "<COMPANY NAME>",
+        "asn":          1234,
+        "domain":       "<Company URL>.com",
+        "callback_url": ""
+    },
+    "local": {
+        "default_vendor":    "arbor",
+        "output_debug": 	 false,       
+        "wait_before_pull":  2,
+        "timezone":     	 "America/New_York",
+        "proxy":             false,
+        "proxy_username":    "",
+        "proxy_passwd":      "",
+        "proxy_url":         "",
+        "proxy_port":        "",
+        "auto_updates":		 false,
+        "updates_url":		 "https://github.com/c2theg/DDoS_Infomation_Sharing/archive/master.zip",
+        "update_checkEvery": "5d"
+    },
+    "email": {
+        "enabled":  false,
+        "server":   "mailrelay.server.com",
+        "port":     465,
+        "auth":     false,
+        "username": "",
+        "passwd":   "",
+        "from":     "ddos_info_sharing_1@company.com"
+    },
+    "email_recipients": [
+        { "to": "admin@carrier.com", "name": "John Smith", "cc":"", "bcc": "", "send_info": false, "send_errors": true },
+        { "to": "admin@carrier.com", "name": "Jane Doe", "cc":"", "bcc": "", "send_info": false, "send_errors": false }
+    ],
+    "remote": [ 
+    	{ "url": "https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "format": "json", "send_infosharing": true, "send_details": false, "timeout": 120, "extra": "", "proto": "tcp" }
+    ],
+	"geo": {
+	    "enabled_forSending":      false,
+	    "enabled_forReceiving":    true,
+        "files_path": 	           "libraries/maxmind/",
+        "update_url": 	           "http://dev.maxmind.com/geoip/legacy/geolite/"
+    },
+    "arbor": {
+        "version":             7.6,   
+        "syslog_trigger_on":   ", is now done,",
+        "syslog_port":         1512,
+        "syslog_proto":        "udp",    
+        "url":      	       "10.1.1.1",
+        "port":     	       443,
+        "key":      	       "<ARBOR_KEY>",
+        "user":     	       "arbor",
+        "zone_secret":         "<PASSWORD>",
+        "wsdl":     	       "PeakflowSP.wsdl",
+        "source_collector":    "getSources.py",
+        "log_to_file":         false,
+        "log_file":            "/var/log/ddos_infosharing_arbor_log.txt",
+        "log_file_errors":     "/var/log/ddos_infosharing_arbor_error_log.txt" 
+    },
+    "a10": {
+        "version":             4.2,
+        "syslog_trigger_on":   " done ",
+        "syslog_port":         1513,
+        "syslog_proto":        "udp",    
+        "url":                 "10.1.1.1",
+        "port":                443,
+        "user":                "a10",
+        "password":            "<PASSWORD>",
+        "source_collector":    "getSources_a10.py",
+        "log_to_file":         false,
+        "log_file":            "/var/log/ddos_infosharing_a10_log.txt",
+        "log_file_errors":     "/var/log/ddos_infosharing_a10_error_log.txt" 
+    },
+    "radware": {
+        "version":             3.8,
+        "syslog_trigger_on":   " done ",
+        "syslog_port":         1514,
+        "syslog_proto":        "udp",
+        "url":                 "10.1.1.1",
+        "port":                443,
+        "user":                "radware",
+        "password":            "<PASSWORD>",
+        "source_collector":    "getSources_radware.py",
+        "log_to_file":         false,
+        "log_file":            "/var/log/ddos_infosharing_radware_log.txt",
+        "log_file_errors":     "/var/log/ddos_infosharing_radware_error_log.txt" 
+    },
+    "f5": {
+        "version":             12.2,
+        "syslog_trigger_on":   " attack is over ",
+        "syslog_port":         1515,
+        "syslog_proto":        "udp",    
+        "url":                 "10.1.1.1",
+        "port":                443,
+        "user":                "admin",
+        "password":            "<PASSWORD>",
+        "source_collector":    "getSources_f5.py",
+        "log_to_file":         false,
+        "log_file":            "/var/log/ddos_infosharing_f5_log.txt",
+        "log_file_errors":     "/var/log/ddos_infosharing_f5_error_log.txt" 
+    }
+}
