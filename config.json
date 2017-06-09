@@ -8,7 +8,7 @@
     },
     "local": {
         "default_vendor":   "arbor",
-        "output_debug":     false,
+        "output_debug":     true,
         "wait_before_pull": 2,
         "timezone":         "America/New_York",
         "proxy":            false,
@@ -34,7 +34,7 @@
         { "to": "admin@carrier.com", "name": "Jane Doe", "cc":"", "bcc": "", "send_info": false, "send_errors": false }
     ],
     "remote": [ 
-        { "url": "https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "format": "json", "send_infosharing": true, "send_details": false, "timeout": 120, "extra": "", "proto": "tcp" }
+        { "url": "https://dis-demo2.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "format": "json", "send_infosharing": true, "send_details": false, "timeout": 120, "extra": "", "proto": "tcp" }
     ],
     "geo": {
         "enabled_forSending":      false,

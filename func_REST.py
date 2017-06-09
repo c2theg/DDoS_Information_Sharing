@@ -19,11 +19,11 @@ class HTTP_Classes:
        'Content-Type': 'application/json',
        'Connection': 'keep-alive'}
     
-    def HTTP_GET_rjson(self, resourceURL, debug=0):
+    def HTTP_GET_rjson(self, resourceURL, Timeout_Dur=90, error_log='', debug=0):
         try:
             if debug == 1: print "HTTP GET for URL: " + str(resourceURL) + "... \n\n"
             HTTP_Response = requests.Session()
-            HTTP_Response = requests.request("GET",str(resourceURL), timeout=60, verify=False)  #  stream=True
+            HTTP_Response = requests.request("GET",str(resourceURL), timeout=Timeout_Dur, verify=False)  #  stream=True
             HTTP_ResponseRAW = HTTP_Response.json()
             if debug == 1: print "\n\n Got back: " + str(HTTP_ResponseRAW) + "\n\n"
             return HTTP_ResponseRAW
@@ -31,11 +31,11 @@ class HTTP_Classes:
             return "Could not fetch HTTP GET. Reason: " +  sys.exc_info()[0]
 
 
-    def HTTP_POST_rjson(self, resourceURL, debug=0):
+    def HTTP_POST_rjson(self, resourceURL, Timeout_Dur=90, error_log='', debug=0):
         try:
             if debug == 1: print "HTTP POST for URL: " + str(resourceURL) + "... \n\n"
             HTTP_Response = requests.Session()
-            HTTP_Response = requests.post(str(resourceURL), JSON_Payload, headers=self.hdr, timeout=60, verify=False, stream=True)  
+            HTTP_Response = requests.post(str(resourceURL), JSON_Payload, headers=self.hdr, timeout=Timeout_Dur, verify=False, stream=True)  
             HTTP_ResponseRAW = HTTP_Response.json()
             if debug == 1: print "\n\n Got back: " + str(HTTP_ResponseRAW) + "\n\n"
             return HTTP_ResponseRAW
@@ -45,29 +45,33 @@ class HTTP_Classes:
 
     #------------------------------------------------------------------------------------------------------------------------------------------------
     
-    def HTTP_GET_SendJson(self, resourceURL, payload, debug=0):
-        if debug == 1: 
-            print "Sending GET data to: " + resourceURL + "\n"
-            print json.dumps(payload, indent=4, sort_keys=True, ensure_ascii=False, encoding='latin1')
-        
-        HTTP_Response = requests.Session()
-        JSON_Payload = json.dumps(payload, ensure_ascii=False, encoding='latin1')
-        HTTP_Response = requests.get(str(resourceURL), JSON_Payload, headers=self.hdr, timeout=60, verify=False)
-        HTTP_ResponseRAW = HTTP_Response.json()
-        if debug == 1: print "\n\n Got back: " + str(HTTP_ResponseRAW) + "\n\n"
-        return HTTP_ResponseRAW
+    def HTTP_GET_SendJson(self, resourceURL, payload, Timeout_Dur=90, error_log='', debug=0):
+        try:
+            if debug == 1: 
+                print "Sending GET data to: " + resourceURL + "\n"
+                print json.dumps(payload, indent=4, sort_keys=True, ensure_ascii=False, encoding='latin1')
+            
+            HTTP_Response = requests.Session()
+            JSON_Payload = json.dumps(payload, ensure_ascii=False, encoding='latin1')
+            HTTP_Response = requests.get(str(resourceURL), JSON_Payload, headers=self.hdr, timeout=Timeout_Dur, verify=False)
+            HTTP_ResponseRAW = HTTP_Response.json()
+            if debug == 1: print "\n\n Got back: " + str(HTTP_ResponseRAW) + "\n\n"
+            return HTTP_ResponseRAW
+        except OSError:
+            return "Could not HTTP GET. Reason: " +  sys.exc_info()[0]    
     
-    
-    def HTTP_POST_SendJson(self, resourceURL, payload, debug=0):
-        if debug == 1: 
-            print "Sending POST data to: " + resourceURL + "\n"
-            print json.dumps(payload, indent=4, sort_keys=True, ensure_ascii=False, encoding='latin1')
-        
-        HTTP_Response = requests.Session()
-        JSON_Payload = json.dumps(payload, ensure_ascii=False, encoding='latin1')
-        HTTP_Response = requests.post(str(resourceURL), JSON_Payload, headers=self.hdr, timeout=60, verify=False)  #  stream=True
-        HTTP_ResponseRAW = HTTP_Response.json()
-        if debug == 1: print "\n\n Got back: " + str(HTTP_ResponseRAW) + "\n\n"
-        return HTTP_ResponseRAW
-        
+    def HTTP_POST_SendJson(self, resourceURL, payload, Timeout_Dur=90, error_log='', debug=0):
+        try:      
+            if debug == 1:
+                print "Sending POST data to: " + resourceURL + "\n"
+                print json.dumps(payload, indent=4, sort_keys=True, ensure_ascii=False, encoding='latin1')
+            
+            HTTP_Response = requests.Session()
+            JSON_Payload = json.dumps(payload, ensure_ascii=False, encoding='latin1')
+            HTTP_Response = requests.post(str(resourceURL), JSON_Payload, headers=self.hdr, timeout=Timeout_Dur, verify=False)  #  stream=True
+            HTTP_ResponseRAW = HTTP_Response.json()
+            if debug == 1: print "\n\n Got back: " + str(HTTP_ResponseRAW) + "\n\n"
+            return HTTP_ResponseRAW
+        except OSError:
+            return "Could not POST HTTP Send. Reason: " +  sys.exc_info()[0]        
        
