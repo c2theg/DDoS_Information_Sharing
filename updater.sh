@@ -39,14 +39,16 @@ fi
 
 echo "Downloading latest versions..."
 
-sudo wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh
-sudo wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/collector.py
-sudo wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/getSources.py
-sudo wget "config.json.new" https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/config.json
+sudo wget "updater.sh" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh"
+sudo wget "collector.py" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/collector.py"
+sudo wget "getSources.py" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/getSources.py"
+sudo wget "config.json.new" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/config.json"
 
 wait
-chmod u+x updater.sh 
+chmod u+x updater.sh
 chmod u+x collector.py
 chmod u+x getSources.py
 
-echo "done! \r\n \r\n"
+echo "Done! \r\n \r\n"
+
+python2.7 collector.py -c config.json
