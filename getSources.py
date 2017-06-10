@@ -10,7 +10,7 @@
 from socket import *
 from io import StringIO
 from datetime import datetime
-import errno, sys, json, os, time, logging, argparse, base64, ssl, re, string, inspect
+import errno, sys, json, os, time, logging, argparse, base64, ssl, re, string, inspect, ast
 import urllib2
 #from pprint import pprint
 #------- Suds ------- 
@@ -195,17 +195,26 @@ time.sleep(varlocal_wait_before_pull)
 misuseTypes = ''
 try:
     alertDetailsResponseRAW = cls_http.HTTP_GET_rjson( str(varArborURL + "/arborws/alerts?api_key=" + varArborKey + "&filter=" + varArgumentReceieved) )
-    #print "REST Received: " + alertDetailsResponseRAW
-    print "\r\n -------------------------------------------- \r\n\r\n";
+    #print "REST Received: \n\n"
+    #print alertDetailsResponseRAW
+    print "\n\n -------------------------------------------- \r\n\r\n"
+
     for i in alertDetailsResponseRAW:
         misuseTypes += str(i['misuseTypes'])
-        print "RAW misuse: " + misuseTypes   # RAW misuse: [u'IP Fragmentation', u'Total Traffic', u'UDP']
+        
+    print "RAW misuse 1: " + misuseTypes   # RAW misuse: [u'IP Fragmentation', u'Total Traffic', u'UDP']
+
     misuseTypes = misuseTypes[1:]  # [u'TCP SYN']
     misuseTypes = misuseTypes[:-1]  # [u'TCP SYN']
     misuseTypes = misuseTypes.replace("u'", "'")
     #misuseTypes = misuseTypes.replace("'", "")
-    if varlocaldebugging == True:
-        print "RAW misuse done: " + str(misuseTypes)
+
+    #RAW misuse: [u'IP Fragmentation', u'Total Traffic', u'UDP']
+    #RAW misuse done: 'IP Fragmentation', 'Total Traffic', 'UDP'
+    #if varlocaldebugging == True:
+
+    
+    print "RAW misuse done: " + str(misuseTypes)
     #------------------------------------------------------------------------
     attackStarted =  str(i['start'])
     attackStopped =  str(i['stop'])
@@ -232,6 +241,7 @@ try:
     client = suds.client.Client(url='file:///' + WSDLfile, location=varArborURL + '/soap/sp', transport=t)
     client.set_options(service='PeakflowSPService', port='PeakflowSPPort', cachingpolicy=1) # retxml=false, prettyxml=false   # https://jortel.fedorapeople.org/suds/doc/suds.options.Options-class.html    
     ArborResultRAW = client.service.getDosAlertDetails(varArgumentReceieved)
+    
     #ArborMitResultRAW = client.service.getMitigationStatisticsByIdXML(varArgumentReceieved)
     #print(ArborResultRAW)
 except ValueError:
@@ -256,8 +266,10 @@ try:
         #TempOutputDict_ALL['ProviderASN'] = varIdentity_asn
         #TempOutputDict_ALL['company_type'] = varIdentity_company_type
 
-        #tempMisUseTypes = []
-        #tempMisUseTypes.append(misuseTypes)
+        misuseTypes = ast.literal_eval(misuseTypes)
+        tempMisUseTypes = []
+        tempMisUseTypes.append(misuseTypes)
+
 
         for x in Sources:
             if ('/32' in x.id or '/128' in x.id):
@@ -272,7 +284,7 @@ try:
                         TempOutputDictEvent['IPaddress'] = CleanIP
                         TempOutputDictEvent['attackStartTime'] = attackStarted
                         TempOutputDictEvent['attackStopTime'] = attackStopped
-                        TempOutputDictEvent['attackTypes'] = misuseTypes
+                        TempOutputDictEvent['attackTypes'] = tempMisUseTypes
                         TempOutputDictEvent['peakBPS'] = x.net.bps
                         TempOutputDictEvent['peakPPS'] = x.net.pps
 #                        TempOutputDictEvent['totalBytesSent'] = ''
