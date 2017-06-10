@@ -27,16 +27,14 @@ wait
 sudo apt-get upgrade -y
 wait
 #--------------------------------------------------------------------------------------------
-cd ~
-
 echo "Downloading files..."
 if [ -s "getSources.py" ] 
 then
-	echo "Deleting files"
-	rm updater.sh
- 	rm collector.py
- 	rm getSources.py
-  rm config.json.new
+    echo "Deleting files"
+    rm updater.sh
+    rm collector.py
+    rm getSources.py
+    rm config.json.new
 fi
 
 echo "Downloading latest versions..."
