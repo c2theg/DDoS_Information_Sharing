@@ -4,7 +4,7 @@
 # Copyright (c) 2017 Rich Compton - Charter Communications
 # All rights reserved.
 # https://github.com/c2theg/DDoS_Infomation_Sharing
-#Inital: 12/23/16  Updated: 6/9/17
+#Inital: 12/23/16  Updated: 6/10/17
 
 #--- Force Python2 as Suds 0.04 doesn't support Python3 fully as of 11/10/2016
 from socket import *
@@ -31,7 +31,7 @@ from func_REST import *
 cls_http = HTTP_Classes()  # instantiate HTTP REST class
 #------ Variables ------
 reload(sys)
-appVersion = '0.2.28'
+appVersion = '0.2.29'
 
 sys.setdefaultencoding('utf8')
 PythonVer = sys.version_info
