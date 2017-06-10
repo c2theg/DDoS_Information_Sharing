@@ -49,14 +49,14 @@ sudo pip --upgrade install
 wait
 #-- GeoIP --
 # https://pypi.python.org/pypi/geoip2
-sudo -E apt-cache search geoip
-sudo apt-get install -y libgeoip-dev
-sudo apt-get install -y python-geoip
-wait
-sudo -E pip install geoip2
-sudo pip install GeoIP
-sudo pip install python-geoip-geolite2
-wait
+#sudo -E apt-cache search geoip
+#sudo apt-get install -y libgeoip-dev
+#sudo apt-get install -y python-geoip
+#wait
+#sudo -E pip install geoip2
+#sudo pip install GeoIP
+#sudo pip install python-geoip-geolite2
+#wait
 #----- others ---
 sudo pip install requests
 sudo pip install --upgrade requests
@@ -84,17 +84,16 @@ wait
 #wait
 #----- Cronjob to download/update Maxmind db ------
 #write out current crontab
-crontab -l > mycron
+  #crontab -l > mycron
 #echo new cron into cron file
-echo "20 4 * */1 3 echo $MyPath/geoipdb_updater.sh" >> mycron
+   #echo "20 4 * */1 3 echo $MyPath/geoipdb_updater.sh" >> mycron
 #echo "20 4 * */1 3 echo $MyPath/updater.sh" >> mycron
 #install new cron file
-crontab mycron
-rm mycron
+   #crontab mycron
+   #rm mycron
 #----- Done -----
-echo "Running GeoIP db updater"
-sudo sh ./geoipdb_updater.sh
-wait
-clear
+   #echo "Running GeoIP db updater"
+   #sudo sh ./geoipdb_updater.sh
+   #wait
 echo "All done...   Starting DDoS Infomation Sharing application!"
 sudo python ./collector.py
