@@ -65,8 +65,9 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
         3) *** FOR QUICK UPDATING (once you already had it running) ***
          sudo wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh && sudo chmod u+x updater.sh && sudo ./updater.sh
          
-            
-    
+         PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files to download, as the application continue's to evolve.
+         
+         
         DONE! Wasn't that easy?!?!
         Ok now that it's all done and running, move on to read the rest. (Please) 
 ------------------------------------------------------------------------------------------------ 
