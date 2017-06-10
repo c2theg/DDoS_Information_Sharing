@@ -290,4 +290,5 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
     
         Cable Labs 
             https://cablelabs.github.io/ddos-info-sharing/
-            https://dis-demo.cablelabs.com/ips/list/        
+            https://github.com/cablelabs/ddos-info-sharing
+            https://dis-demo2.cablelabs.com/ips/list/  
