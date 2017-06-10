@@ -31,7 +31,7 @@ from func_REST import *
 cls_http = HTTP_Classes()  # instantiate HTTP REST class
 #------ Variables ------
 reload(sys)
-appVersion = '0.2.27'
+appVersion = '0.2.28'
 
 sys.setdefaultencoding('utf8')
 PythonVer = sys.version_info
@@ -90,7 +90,6 @@ try:
     varArborKey = configData['arbor']['key']
     varArborUser = configData['arbor']['user']
     varArborPasswd = configData['arbor']['zone_secret']
-    
     varLogFile = configData['arbor']['log_file']
     varlocal_log_to_file = configData['arbor']['log_to_file']
     
@@ -174,7 +173,6 @@ print "            Get Updates from: https://github.com/c2theg/DDoS_Infomation_S
 
 if sys.version_info < (2, 7, 9):
     print 'Insecure TLS/SSL detected: upgrade to Python 2.7.9+ to prevent TLS errors'
-    
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
@@ -200,21 +198,15 @@ try:
     print "\n\n -------------------------------------------- \r\n\r\n"
 
     for i in alertDetailsResponseRAW:
-        misuseTypes += str(i['misuseTypes'])
-        
-    print "RAW misuse 1: " + misuseTypes   # RAW misuse: [u'IP Fragmentation', u'Total Traffic', u'UDP']
-
+        misuseTypes += str(i['misuseTypes'])    
+        #print "RAW misuse 1: " + misuseTypes   # RAW misuse: [u'IP Fragmentation', u'Total Traffic', u'UDP']
     misuseTypes = misuseTypes[1:]  # [u'TCP SYN']
     misuseTypes = misuseTypes[:-1]  # [u'TCP SYN']
     misuseTypes = misuseTypes.replace("u'", "'")
     #misuseTypes = misuseTypes.replace("'", "")
 
-    #RAW misuse: [u'IP Fragmentation', u'Total Traffic', u'UDP']
-    #RAW misuse done: 'IP Fragmentation', 'Total Traffic', 'UDP'
-    #if varlocaldebugging == True:
-
-    
-    print "RAW misuse done: " + str(misuseTypes)
+    if varlocaldebugging == True:
+        print "RAW misuse done: " + str(misuseTypes)
     #------------------------------------------------------------------------
     attackStarted =  str(i['start'])
     attackStopped =  str(i['stop'])
@@ -269,7 +261,6 @@ try:
         misuseTypes = ast.literal_eval(misuseTypes)
         tempMisUseTypes = []
         tempMisUseTypes.append(misuseTypes)
-
 
         for x in Sources:
             if ('/32' in x.id or '/128' in x.id):
