@@ -18,11 +18,13 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.1                             \r\n
+Version:  0.5             \r\n
 Last Updated:  6/10/2017
 \r\n \r\n
 Updating system first..."
-apt-get update && apt-get upgrade -y
+sudo apt-get update 
+wait
+sudo apt-get upgrade -y
 wait
 #--------------------------------------------------------------------------------------------
 cd ~
