@@ -18,7 +18,7 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.5.1             \r\n
+Version:  0.5.2             \r\n
 Last Updated:  6/10/2017
 \r\n \r\n
 Updating system first..."
@@ -27,28 +27,37 @@ wait
 sudo apt-get upgrade -y
 wait
 #--------------------------------------------------------------------------------------------
-echo "Downloading files..."
 if [ -s "getSources.py" ] 
 then
-    echo "Deleting files"
+    echo "Deleting Old files!!!"
     rm updater.sh
     rm collector.py
     rm getSources.py
+    rm func_REST.py
+    
     rm config.json.new
 fi
 
-echo "Downloading latest versions..."
+#------------------------------
+echo "\n\n\n\n"
+echo "Downloading latest versions to all files ... \n\n\n\n"
 
 sudo wget "updater.sh" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh"
 sudo wget "collector.py" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/collector.py"
 sudo wget "getSources.py" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/getSources.py"
 sudo wget "config.json.new" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/config.json"
+sudo wget "func_REST.py" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/func_REST.py"
 
 wait
+echo "\n\n\n Done... \n\n"
+#----- Update priv. -----------
+
 chmod u+x updater.sh
 chmod u+x collector.py
 chmod u+x getSources.py
+chmod u+x func_REST.py
 
+#------------------------------
 echo "Done! \r\n \r\n"
 
 python2.7 collector.py -c config.json
