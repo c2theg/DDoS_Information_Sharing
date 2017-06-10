@@ -61,6 +61,11 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
         2) When you're done with that, and you setup Arbor SP (Section 4) to send the syslog traffic to your server, just run this command
         
             sudo chmod u+x ./initial_start.sh && ./initial_start.sh
+            
+        3) *** FOR QUICK UPDATING (once you already had it running) ***
+         sudo wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh && sudo chmod u+x updater.sh && sudo ./updater.sh
+         
+            
     
         DONE! Wasn't that easy?!?!
         Ok now that it's all done and running, move on to read the rest. (Please) 
