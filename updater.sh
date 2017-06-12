@@ -18,8 +18,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.5.2             \r\n
-Last Updated:  6/10/2017
+Version:  0.5.3             \r\n
+Last Updated:  6/12/2017
 \r\n \r\n
 Updating system first..."
 sudo apt-get update 
