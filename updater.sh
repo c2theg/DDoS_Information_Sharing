@@ -42,11 +42,11 @@ fi
 echo "\n\n\n\n"
 echo "Downloading latest versions to all files ... \n\n\n\n"
 
-sudo wget "updater.sh" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh"
-sudo wget "collector.py" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/collector.py"
-sudo wget "getSources.py" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/getSources.py"
-sudo wget "config.json.new" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/config.json"
-sudo wget "func_REST.py" "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/func_REST.py"
+sudo wget -O updater.sh "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh"
+sudo wget -O collector.py "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/collector.py"
+sudo wget -O getSources.py "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/getSources.py"
+sudo wget -O config.json.new "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/config.json"
+sudo wget -O func_REST.py "https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/func_REST.py"
 
 wait
 echo "\n\n\n Done... \n\n"
