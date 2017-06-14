@@ -36,8 +36,8 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard  <span id="lbl_status_main"></span></h1>
-          <h3><span id="lbl_status_minor"></span></h3>
+          <h1 class="page-header">Dashboard  <button class="btn btn-default" id="btn_refresh" name="btn_refresh" type="button"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> <span id="lbl_status_main"></span></h1>
+          <span id="lbl_status_minor"></span>
 
           <h2 class="sub-header">Attacking Source IP's</h2>
           <div class="table-responsive">
@@ -52,6 +52,20 @@
                 </tr>
               </thead>
               <tbody>
+                <tr>
+                  <td>1,001</td>
+                  <td>Lorem</td>
+                  <td>ipsum</td>
+                  <td>dolor</td>
+                  <td>sit</td>
+                </tr>
+                <tr>
+                  <td>1,002</td>
+                  <td>amet</td>
+                  <td>consectetur</td>
+                  <td>adipiscing</td>
+                  <td>elit</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -64,54 +78,89 @@
     <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script><script src="//cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var data = IS_User = IS_Key = IS_URL = IS_Limit = '';
-            IS_User = '';
-            IS_Key = '';
-            IS_Limit = 30;
-            IS_URL = "https://dis-demo2.cablelabs.com/api/v1/ips/";
-            if (IS_Key != '') {
-                console.log("connecting to: " + IS_URL);
-                $('#lbl_status_minor').fadeTo("fast",100).html("<img src='//bit.ly/cgray-loader4' alt='loading' /> Gathering Data from: " + IS_URL + "...");
-                $.ajax({
-                    url: IS_URL,
-                    dataType: "text",
-                    type: 'GET',
-                    data: {
-                        username: IS_User,
-                        api_key: IS_Key,
-                        limit: IS_Limit
-                    },
-                    success: function(data) {
-                        alert("got back: " + data);
-                        if (data != '') {
-                            $.each(data.dates, function(index, element) {
-                                alert(element.timeStamp); 
-                                $('#tbl_sources tr:last').after('<tr>...</tr><tr>...</tr>');
-                            });
-                            $('#tbl_sources').DataTable();
+            $('#btn_refresh').click(function(e) {
+                load_CritsDB();
+            });
+            
+            function load_CritsDB() {
+                var data = IS_User = IS_Key = IS_URL = IS_Limit = '';
+                IS_User = '';
+                IS_Key = '';
+                IS_Limit = 30;
+                
+                // IS_URL = "https://dis-demo2.cablelabs.com/api/v1/ips/?username=" + IS_User + "&api_key=" + IS_Key + "&limit=" + IS_Limit;
+                IS_URL = "https://dis-demo2.cablelabs.com/api/v1/ips/";
+                if (IS_Key != '') {
+                    $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-info' role='alert'><img src='//bit.ly/cgray-loader4' alt='loading' /> Gathering Data from: " + IS_URL + "</div>");
+                    $.ajax({
+                        url: IS_URL,
+                        dataType: "text",
+                        type: 'GET',
+                        data: {
+                            username: IS_User,
+                            api_key: IS_Key,
+                            limit: IS_Limit
+                        },
+                        success: function(data) {
+                            //alert("got back: " + data);
+                            $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Received: " + data + "</div>");
+                            if (data != '') {
+                                $.each(data.dates, function(index, element) {
+                                    //alert(element.timeStamp); 
+                                    $('#tbl_sources tr:last').after('<tr>...</tr><tr>...</tr>');
+                                });
+                                $('#tbl_sources').DataTable(); // instantiate datatable
+                            }
+                        },
+                        parsererror: function(data) {
+                            $('#lbl_status_minor').html("<div class='alert alert-info' role='alert'> Ajax load error. Returned: " + data + "</div>");
+                        },
+                        timeout: function(data) {
+                            $('#lbl_status_minor').html("<div class='alert alert-info' role='alert'>Timeout. Returned: " + data + "</div>");
+                        },
+                        notmodified: function(data) {
+                            $('#lbl_status_minor').html("<div class='alert alert-info' role='alert'> <i aria-hidden='true' class='i-warning'></i> Not Modified. Returned: " + data + "</div>");
+                        },
+                        error: function (xmlHttpRequest, textStatus, errorThrown) {
+                            $('#lbl_status_minor').html("<div class='alert alert-danger' role='alert'>AJAX Error - Data Returned: " + data + ", XHR: " + xmlHttpRequest + ", Status: " + textStatus + ", Error: " + errorThrown + " Stringified: " + JSON.stringify(data) + "</div>");
+                            //alert("Error AJAX - Data Returned: " + data + ", XHR: " + xmlHttpRequest + ", Status: " + textStatus + ", Error: " + errorThrown + " Stringified: " + JSON.stringify(data));
                         }
+                    });  // end of ajax call
+                } else {
+                    $('#lbl_status_minor').fadeTo("fast",100).html("<span class='label label-danger'><img src='//bit.ly/cgray-img-error' alt='error' /> Please edit the code and enter your CRITS Username and Api Key</span>");
+               }
+            }
+            
+            load_CritsDB();
+            /* --------------------------------------------------------------------------------------------------------- */
+            timer(300000,
+                    function(timeleft) { // called every step to update the visible countdown
+                        //document.getElementById('timer').innerHTML = timeleft+" second(s)";
                     },
-                    parsererror: function(data) {
-                        $('#lbl_status_minor').html("<i aria-hidden='true' class='i-warning'></i> Ajax load error. Returned: " + data);
-                    },
-                    timeout: function(data) {
-                        $('#lbl_status_minor').html("<i aria-hidden='true' class='i-warning'></i> Timeout. Returned: " + data);
-                    },
-                    notmodified: function(data) {
-                        $('#lbl_status_minor').html("<i aria-hidden='true' class='i-warning'></i> Not Modified. Returned: " + data);
-                    },
-                    error: function (xmlHttpRequest, textStatus, errorThrown) {
-                        $('#lbl_status_minor').html("<i aria-hidden='true' class='i-close-4'></i> Error AJAX - Data Returned: " + data + ", XHR: " + xmlHttpRequest + ", Status: " + textStatus + ", Error: " + errorThrown + " Stringified: " + JSON.stringify(data));
-                        alert("Error AJAX - Data Returned: " + data + ", XHR: " + xmlHttpRequest + ", Status: " + textStatus + ", Error: " + errorThrown + " Stringified: " + JSON.stringify(data));
+                    function() { // what to do after
+                        //alert("Timer complete!");
+                        load_CritsDB();
                     }
-                });  // end of ajax call
-            } else {
-                $('#lbl_status_minor').fadeTo("fast",100).html("<img src='//bit.ly/cgray-img-error' alt='error' /> Please edit the code and enter your CRITS Username and Api Key");
-           }
-        });
+            );
+            
+            function timer(time,update,complete) {
+                var start = new Date().getTime();
+                var interval = setInterval(function() {
+                    var now = time-(new Date().getTime()-start);
+                    if( now <= 0) {
+                        clearInterval(interval);
+                        complete();
+                    }
+                    else update(Math.floor(now/1000));
+                },100); // the smaller this number, the more accurate the timer will be
+            }
+           
+            
+        }); /* --- End jQuery --- */
         /* --------------------------------------------------------------------------------------------------------- */
         function createCookie(name, value, days) {
             var expires;
+
             if (days) {
                 var date = new Date();
                 date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -135,6 +184,9 @@
 
         function eraseCookie(name) {
             createCookie(name, "", -1);
-        }    
+        }
+        /* --------------------------------------------------------------------------------------------------------- */   
+
+
     </script>
 </body></html>
