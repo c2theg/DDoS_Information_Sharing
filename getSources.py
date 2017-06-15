@@ -31,7 +31,7 @@ from func_REST import *
 cls_http = HTTP_Classes()  # instantiate HTTP REST class
 #------ Variables ------
 reload(sys)
-appVersion = '0.2.29'
+appVersion = '0.2.30'
 
 sys.setdefaultencoding('utf8')
 PythonVer = sys.version_info
@@ -200,10 +200,6 @@ try:
     for i in alertDetailsResponseRAW:
         misuseTypes += str(i['misuseTypes'])    
         #print "RAW misuse 1: " + misuseTypes   # RAW misuse: [u'IP Fragmentation', u'Total Traffic', u'UDP']
-    misuseTypes = misuseTypes[1:]  # [u'TCP SYN']
-    misuseTypes = misuseTypes[:-1]  # [u'TCP SYN']
-    misuseTypes = misuseTypes.replace("u'", "'")
-    #misuseTypes = misuseTypes.replace("'", "")
 
     if varlocaldebugging == True:
         print "RAW misuse done: " + str(misuseTypes)
@@ -259,8 +255,6 @@ try:
         #TempOutputDict_ALL['company_type'] = varIdentity_company_type
 
         misuseTypes = ast.literal_eval(misuseTypes)
-        tempMisUseTypes = []
-        tempMisUseTypes.append(misuseTypes)
 
         for x in Sources:
             if ('/32' in x.id or '/128' in x.id):
@@ -275,7 +269,7 @@ try:
                         TempOutputDictEvent['IPaddress'] = CleanIP
                         TempOutputDictEvent['attackStartTime'] = attackStarted
                         TempOutputDictEvent['attackStopTime'] = attackStopped
-                        TempOutputDictEvent['attackTypes'] = tempMisUseTypes
+                        TempOutputDictEvent['attackTypes'] = misuseTypes
                         TempOutputDictEvent['peakBPS'] = x.net.bps
                         TempOutputDictEvent['peakPPS'] = x.net.pps
 #                        TempOutputDictEvent['totalBytesSent'] = ''
