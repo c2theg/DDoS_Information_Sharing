@@ -1,8 +1,8 @@
 <!DOCTYPE html><!--[if lt IE 9]><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"><![endif]--><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Copyright (c) 2017 Christopher MJ Gray - Updated  6/13/2017 07:49:06 EST" /><META NAME="application-name" CONTENT="DDoS Information Sharing" /><META NAME="ROBOTS" CONTENT="NO-INDEX, NO-FOLLOW"><meta name="generator" content="By hand!"><meta name="description" content="DDoS Information Sharing"><meta name="keyword" content="ddos"><META NAME="revisit-after" CONTENT="300">
     <link rel="icon" href="https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/images/favicon.ico">
-    <title>DDoS Information Sharing - v0.0.2</title>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"><link href="//getbootstrap.com/examples/dashboard/dashboard.css" rel="stylesheet">
-    <link href="//cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet">
+    <title>DDoS Information Sharing - v0.0.3</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"><link href="https://getbootstrap.com/examples/dashboard/dashboard.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet">
   </head><body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
@@ -73,9 +73,9 @@
       </div>
     </div>
     <!-- ================================================== -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script><script src="//cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script><script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('#btn_refresh').click(function(e) {
@@ -87,11 +87,9 @@
                 IS_User = '';
                 IS_Key = '';
                 IS_Limit = 30;
-                
-                // IS_URL = "https://dis-demo2.cablelabs.com/api/v1/ips/?username=" + IS_User + "&api_key=" + IS_Key + "&limit=" + IS_Limit;
                 IS_URL = "https://dis-demo2.cablelabs.com/api/v1/ips/";
                 if (IS_Key != '') {
-                    $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-info' role='alert'><img src='//bit.ly/cgray-loader4' alt='loading' /> Gathering Data from: " + IS_URL + "</div>");
+                    $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-info' role='alert'><img src='https://bit.ly/cgray-loader4' alt='loading' /> Gathering Data from: " + IS_URL + "</div>");
                     $.ajax({
                         url: IS_URL,
                         dataType: "text",
@@ -127,7 +125,7 @@
                         }
                     });  // end of ajax call
                 } else {
-                    $('#lbl_status_minor').fadeTo("fast",100).html("<span class='label label-danger'><img src='//bit.ly/cgray-img-error' alt='error' /> Please edit the code and enter your CRITS Username and Api Key</span>");
+                    $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-danger' role='alert'><img src='https://bit.ly/cgray-img-error' alt='error' /> Please edit the code and enter your CRITS Username and Api Key</div>");
                }
             }
             
@@ -185,8 +183,5 @@
         function eraseCookie(name) {
             createCookie(name, "", -1);
         }
-        /* --------------------------------------------------------------------------------------------------------- */   
-
-
     </script>
 </body></html>
