@@ -13,7 +13,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.1</a>
+          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.2</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -45,9 +45,11 @@
               <thead>
                 <tr>
                   <th>IP Address</th>
+                  <th>AS Info</th>
                   <th>Location</th>
                   <th>Size</th>
                   <th>Occurred</th>
+                  <th>Saw by</th>
                   <th>Info</th>
                 </tr>
               </thead>
@@ -120,8 +122,17 @@
         $(document).ready(function() {
         	// instantiate datatable
             var t1 = $('#tbl_sources').DataTable( {
-                "order": [[ 3, "desc" ]],
-                "pageLength": 50
+                "order": [[ 4, "desc" ]],
+                "pageLength": 50,
+                "columns": [
+                    { "width": "10%" },
+                    { "width": "10%" },
+                    { "width": "20%" },
+                    { "width": "10%" },
+                    { "width": "5%" },
+                    { "width": "25%" },
+                    null
+                  ]
             });
          	//----------- init Load of Settings ------------------
             load_CritsDB();
@@ -174,11 +185,11 @@
 	                    	limit: IS_Limit
 	                    },
 	                    success: function(data) {
-	                    	var parsed_json = sub_objects = temp_type = temp_value = display_ip = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_Lat = display_Long = display_reporters = display_desc = '';
-                            t1.clear();
+	                    	var parsed_json = sub_objects = temp_type = temp_value = display_ip = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_lastseen = display_lastSeenBy = display_reporters = display_desc = '';
+                            t1.clear(); // clear table
 	                        
 	                        $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Processing... <img src='https://bit.ly/cgray-loader4' alt='loading' /> </div>");
-	                        console.log(data);
+	                        //console.log(data);
 	                        if (data != '') {
 	                        	parsed_json = JSON.parse(data);
 	                            $.each(parsed_json.objects, function(index, element) {
@@ -190,6 +201,12 @@
 	                                $.each(element.objects, function(index1, element1) {
 	                                	 if (element1.type != '') {
 	                                		 switch(element1.type) {
+	                                		    case "Last Time Received":
+	                                		    	display_lastseen = element1.value;
+                                                    break;	   
+                                                case "Reported By":
+                                                	display_lastSeenBy = element1.value;
+                                                    break;                                                    
 	                                		    case "Number of Times Seen":
 	                                		    	display_timesSeen = element1.value;
 	                                		        break;
@@ -218,16 +235,20 @@
                                                     display_State = element1.value;
                                                     break;                                                  
 	                                		 }
+	                                		 display_asn = display_asn_num + ' ' + display_asn_name;
 	                                		 display_location = display_City + ', ' + display_State + ', ' + display_Country;
 	                                		 display_size = display_size_bps + "bps / " + display_size_pps + "pps";
+	                                		 display_Saw = display_lastseen + " by: " + display_lastSeenBy;
 	                                	 } 
 	                                });
 	                                //--- populate table ---
 	                                t1.row.add( [
 	                                	display_ip,
+	                                	display_asn,
 	                                	display_location,
 	                                	display_size,
 	                                	display_timesSeen,
+	                                	display_Saw,
 	                                	display_desc
 	                                ] ).draw( false );                            
 	                            });
