@@ -1,4 +1,4 @@
-<!DOCTYPE html><!--[if lt IE 9]><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"><![endif]--><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Copyright (c) 2017 Christopher MJ Gray - Updated  6/13/2017 07:49:06 EST" /><META NAME="application-name" CONTENT="DDoS Information Sharing" /><META NAME="ROBOTS" CONTENT="NO-INDEX, NO-FOLLOW"><meta name="generator" content="By hand!"><meta name="description" content="DDoS Information Sharing"><meta name="keyword" content="ddos">
+<!DOCTYPE html><!--[if lt IE 9]><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"><![endif]--><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Copyright (c) 2017 Christopher MJ Gray - Updated  6/13/2017 07:49:06 EST" /><META NAME="application-name" CONTENT="DDoS Information Sharing" /><META NAME="ROBOTS" CONTENT="NO-INDEX, NO-FOLLOW"><meta name="generator" content="By hand!"><meta name="description" content="DDoS Information Sharing"><meta name="keyword" content="ddos"><meta http-equiv="refresh" content="3600">
     <link rel="icon" href="https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/images/favicon.ico">
     <title>DDoS Information Sharing</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"><link href="https://getbootstrap.com/examples/dashboard/dashboard.css" rel="stylesheet">
@@ -13,7 +13,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.2</a>
+          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.3</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -49,7 +49,7 @@
                   <th>Location</th>
                   <th>Size</th>
                   <th>Occurred</th>
-                  <th>Saw by</th>
+                  <th>Last Seen by</th>
                   <th>Info</th>
                 </tr>
               </thead>
@@ -89,7 +89,7 @@
 	            </tr>
 	            <tr>
 	              <td>Default Row Limit: </td>
-	              <td><input type="text" name="txt_resultLimit" id="txt_resultLimit" placeholder="30" value=""></td>
+	              <td><input type="text" name="txt_resultLimit" id="txt_resultLimit" placeholder="" value="30"></td>
 	            </tr>            
 	          </tbody>
 	        </table>
@@ -99,9 +99,9 @@
 	          <tbody>
 	            <tr>
 	              <td>Refresh Interval: (seconds) </td>
-	              <td><input type="text" name="txt_refreshInt" id="txt_refreshInt" placeholder="300" value=""></td>
-	            </tr>            
-	          </tbody>  
+	              <td><input type="text" name="txt_refreshInt" id="txt_refreshInt" placeholder="" value="300"></td>
+	            </tr>
+	          </tbody>
 	        </table>
 	
 	      </div>
@@ -193,10 +193,8 @@
 	                        if (data != '') {
 	                        	parsed_json = JSON.parse(data);
 	                            $.each(parsed_json.objects, function(index, element) {
-	                                //console.log(element.ip);
 	                                display_ip = element.ip;
 	                                display_desc = element.description;
-	                                
 	                                //-- sub objects --
 	                                $.each(element.objects, function(index1, element1) {
 	                                	 if (element1.type != '') {
