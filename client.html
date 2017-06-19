@@ -1,6 +1,6 @@
-<!DOCTYPE html><!--[if lt IE 9]><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"><![endif]--><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Copyright (c) 2017 Christopher MJ Gray - Updated  6/13/2017 07:49:06 EST" /><META NAME="application-name" CONTENT="DDoS Information Sharing" /><META NAME="ROBOTS" CONTENT="NO-INDEX, NO-FOLLOW"><meta name="generator" content="By hand!"><meta name="description" content="DDoS Information Sharing"><meta name="keyword" content="ddos"><META NAME="revisit-after" CONTENT="1800">
+<!DOCTYPE html><!--[if lt IE 9]><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"><![endif]--><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Copyright (c) 2017 Christopher MJ Gray - Updated  6/13/2017 07:49:06 EST" /><META NAME="application-name" CONTENT="DDoS Information Sharing" /><META NAME="ROBOTS" CONTENT="NO-INDEX, NO-FOLLOW"><meta name="generator" content="By hand!"><meta name="description" content="DDoS Information Sharing"><meta name="keyword" content="ddos">
     <link rel="icon" href="https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/images/favicon.ico">
-    <title>DDoS Information Sharing - v0.0.6</title>
+    <title>DDoS Information Sharing</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"><link href="https://getbootstrap.com/examples/dashboard/dashboard.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet">
   </head><body>
@@ -13,7 +13,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">DDoS Info Sharing - Viewer</a>
+          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.0</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -46,19 +46,12 @@
                 <tr>
                   <th>IP Address</th>
                   <th>Location</th>
-                  <th>Speed</th>
-                  <th>Reported By</th>
+                  <th>Size</th>
+                  <th>Occurred</th>
                   <th>Info</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>192.168.1.1</td>
-                  <td>Localhost</td>
-                  <td>1mbps</td>
-                  <td>na</td>
-                  <td>Fake, demo data. Ignore</td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -125,7 +118,7 @@
         var data = IS_User = IS_Key = IS_URL = IS_Limit = '';
 	    /* --------------------------------------------------------------------------------------------------------- */
         $(document).ready(function() {
-        	//----------- init Load of Settings ------------------
+         	//----------- init Load of Settings ------------------
             load_CritsDB();
             /* --------------------------------------------------------------------------------------------------------- */
         	$('#btn_refresh').click(function(e) {
@@ -176,13 +169,68 @@
 	                    	limit: IS_Limit
 	                    },
 	                    success: function(data) {
-	                        $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Received: " + data + " (" + CurrentDateTime() + ")</div>");
+	                    	var parsed_json = sub_objects = temp_type = temp_value = display_ip = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_Lat = display_Long = display_reporters = display_desc = '';
+	                        // instantiate datatable
+	                        var t1 = $('#tbl_sources').DataTable( {
+	                            "order": [[ 3, "desc" ]],
+	                            "pageLength": 50
+	                        });
+	                        
+	                        $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Processing... <img src='https://bit.ly/cgray-loader4' alt='loading' /> </div>");
+	                        console.log(data);
 	                        if (data != '') {
-	                            $.each(data.dates, function(index, element) {
-	                                //alert(element.timeStamp); 
-	                                $('#tbl_sources tr:last').after('<tr>...</tr><tr>...</tr>');
+	                        	parsed_json = JSON.parse(data);
+	                            $.each(parsed_json.objects, function(index, element) {
+	                                //console.log(element.ip);
+	                                display_ip = element.ip;
+	                                display_desc = element.description;
+	                                
+	                                //-- sub objects --
+	                                $.each(element.objects, function(index1, element1) {
+	                                	 if (element1.type != '') {
+	                                		 switch(element1.type) {
+	                                		    case "Number of Times Seen":
+	                                		    	display_timesSeen = element1.value;
+	                                		        break;
+                                                case "Total Bytes Sent":
+                                                	display_size_bps = element1.value;
+                                                    break;
+                                                case "Total Packets Sent":
+                                                	display_size_pps = element1.value;
+                                                    break;
+                                                case "AS Number":
+                                                	display_asn_num = element1.value;
+                                                    break;
+                                                case "AS Name":
+                                                	display_asn_name = element1.value;
+                                                    break;
+                                                case "Number of Reporters":
+                                                	display_reporters = element1.value;
+                                                    break;
+                                                case "City":
+                                                    display_City = element1.value;
+                                                    break;
+                                                case "Country":
+                                                	display_Country = element1.value;
+                                                    break;
+                                                case "State":
+                                                    display_State = element1.value;
+                                                    break;                                                  
+	                                		 }
+	                                		 display_location = display_City + ', ' + display_State + ', ' + display_Country;
+	                                		 display_size = display_size_bps + "bps / " + display_size_pps + "pps";
+	                                	 } 
+	                                });
+	                                //--- populate table ---
+	                                t1.row.add( [
+	                                	display_ip,
+	                                	display_location,
+	                                	display_size,
+	                                	display_timesSeen,
+	                                	display_desc
+	                                ] ).draw( false );                            
 	                            });
-	                            $('#tbl_sources').DataTable(); // instantiate datatable
+	                            $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Loaded (" + CurrentDateTime() + ")</div>");
 	                        }
 	                    },
 	                    parsererror: function(data) {
@@ -206,6 +254,8 @@
         	/* --------------------------------------------------------------------------------------------------------- */
             if (localStorage.IS_Refresh) {
 	        	setInterval(function(){
+	        		//alert("loading crits from timer");
+	        		console.log("loading crits from timer");
 	        		load_CritsDB();
 	        	}, (parseInt(IS_Refresh) * 1000));
             }
