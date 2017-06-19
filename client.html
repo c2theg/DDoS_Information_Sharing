@@ -13,7 +13,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.0</a>
+          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.1</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -118,6 +118,11 @@
         var data = IS_User = IS_Key = IS_URL = IS_Limit = '';
 	    /* --------------------------------------------------------------------------------------------------------- */
         $(document).ready(function() {
+        	// instantiate datatable
+            var t1 = $('#tbl_sources').DataTable( {
+                "order": [[ 3, "desc" ]],
+                "pageLength": 50
+            });
          	//----------- init Load of Settings ------------------
             load_CritsDB();
             /* --------------------------------------------------------------------------------------------------------- */
@@ -170,11 +175,7 @@
 	                    },
 	                    success: function(data) {
 	                    	var parsed_json = sub_objects = temp_type = temp_value = display_ip = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_Lat = display_Long = display_reporters = display_desc = '';
-	                        // instantiate datatable
-	                        var t1 = $('#tbl_sources').DataTable( {
-	                            "order": [[ 3, "desc" ]],
-	                            "pageLength": 50
-	                        });
+                            t1.clear();
 	                        
 	                        $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Processing... <img src='https://bit.ly/cgray-loader4' alt='loading' /> </div>");
 	                        console.log(data);
