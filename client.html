@@ -13,7 +13,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.3</a>
+          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.4</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -138,17 +138,17 @@
             load_CritsDB();
             /* --------------------------------------------------------------------------------------------------------- */
         	$('#btn_refresh').click(function(e) {
-            	load_CritsDB();
-            });
+            load_CritsDB();
+          });
             
-            $('#btn_saveSettings').click(function(e) {
-                localStorage.IS_URL = $("#txt_url").val();
+          $('#btn_saveSettings').click(function(e) {
+              localStorage.IS_URL = $("#txt_url").val();
             	localStorage.IS_User = $("#txt_userid").val();
             	localStorage.IS_Key = $("#txt_apikey").val();
             	localStorage.IS_Limit = $("#txt_resultLimit").val();
             	localStorage.IS_Refresh = $("#txt_refreshInt").val();
             	$('#modal_Settings').modal('hide');            	
-                load_CritsDB();
+              load_CritsDB();
             });
 
         	function load_CritsDB() {
@@ -172,7 +172,6 @@
                 } else {
                     alert("Sorry! No Web Storage support..");
                 }
-
                 if (localStorage.IS_URL) {
 	                $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-info' role='alert'><img src='https://bit.ly/cgray-loader4' alt='loading' /> Gathering Data from: " + IS_URL + " - Username: " + IS_User + "</div>");
 	                $.ajax({
@@ -185,7 +184,7 @@
 	                    	limit: IS_Limit
 	                    },
 	                    success: function(data) {
-	                    	var parsed_json = sub_objects = temp_type = temp_value = display_ip = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_lastseen = display_lastSeenBy = display_reporters = display_desc = '';
+	                    	var parsed_json = sub_objects = '';
                             t1.clear(); // clear table
 	                        
 	                        $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Processing... <img src='https://bit.ly/cgray-loader4' alt='loading' /> </div>");
@@ -193,6 +192,8 @@
 	                        if (data != '') {
 	                        	parsed_json = JSON.parse(data);
 	                            $.each(parsed_json.objects, function(index, element) {
+                                  var display_ip = display_desc = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_lastseen = display_lastSeenBy = display_reporters = "";
+
 	                                display_ip = element.ip;
 	                                display_desc = element.description;
 	                                //-- sub objects --
@@ -201,37 +202,37 @@
 	                                		 switch(element1.type) {
 	                                		    case "Last Time Received":
 	                                		    	display_lastseen = element1.value;
-                                                    break;	   
-                                                case "Reported By":
-                                                	display_lastSeenBy = element1.value;
-                                                    break;                                                    
+                                            break;	   
+                                          case "Reported By":
+                                            display_lastSeenBy = element1.value;
+                                            break;
 	                                		    case "Number of Times Seen":
 	                                		    	display_timesSeen = element1.value;
-	                                		        break;
-                                                case "Total Bytes Sent":
-                                                	display_size_bps = element1.value;
-                                                    break;
-                                                case "Total Packets Sent":
-                                                	display_size_pps = element1.value;
-                                                    break;
-                                                case "AS Number":
-                                                	display_asn_num = element1.value;
-                                                    break;
-                                                case "AS Name":
-                                                	display_asn_name = element1.value;
-                                                    break;
-                                                case "Number of Reporters":
-                                                	display_reporters = element1.value;
-                                                    break;
-                                                case "City":
-                                                    display_City = element1.value;
-                                                    break;
-                                                case "Country":
-                                                	display_Country = element1.value;
-                                                    break;
-                                                case "State":
-                                                    display_State = element1.value;
-                                                    break;                                                  
+	                                		      break;
+                                          case "Total Bytes Sent":
+                                            display_size_bps = element1.value;
+                                            break;
+                                          case "Total Packets Sent":
+                                          	display_size_pps = element1.value;
+                                            break;
+                                          case "AS Number":
+                                          	display_asn_num = element1.value;
+                                            break;
+                                          case "AS Name":
+                                          	display_asn_name = element1.value;
+                                            break;
+                                          case "Number of Reporters":
+                                          	display_reporters = element1.value;
+                                            break;
+                                          case "City":
+                                            display_City = element1.value;
+                                            break;
+                                          case "Country":
+                                          	display_Country = element1.value;
+                                            break;
+                                          case "State":
+                                            display_State = element1.value;
+                                            break;
 	                                		 }
 	                                		 display_asn = display_asn_num + ' ' + display_asn_name;
 	                                		 display_location = display_City + ', ' + display_State + ', ' + display_Country;
@@ -248,7 +249,7 @@
 	                                	display_timesSeen,
 	                                	display_Saw,
 	                                	display_desc
-	                                ] ).draw( false );                            
+	                                ] ).draw( false );
 	                            });
 	                            $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Loaded (" + CurrentDateTime() + ")</div>");
 	                        }
