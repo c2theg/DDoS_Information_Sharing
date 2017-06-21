@@ -13,7 +13,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.5</a>
+          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.6</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -31,7 +31,8 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="client.html">Bad IP's <span class="sr-only">(current)</span></a></li>
+            <li><a href="client_submissions.html">Uploaded IP's</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -49,7 +50,7 @@
                   <th>Size</th>
                   <th>Occurred</th>
                   <th>Last Seen by</th>
-                  <th>Info</th>
+                  <th>Events</th>
                 </tr>
               </thead>
               <tbody>
@@ -174,7 +175,7 @@
                 if (localStorage.IS_URL) {
 	                $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-info' role='alert'><img src='https://bit.ly/cgray-loader4' alt='loading' /> Gathering Data from: " + IS_URL + " - Username: " + IS_User + "</div>");
 	                $.ajax({
-	                    url: IS_URL,
+	                    url: IS_URL + "/api/v1/data_distribution_resource/?",
 	                    dataType: "text",
 	                    type: 'GET',
 	                    data: {
@@ -190,58 +191,55 @@
 	                        //console.log(data);
 	                        if (data != '') {
 	                        	parsed_json = JSON.parse(data);
-	                            $.each(parsed_json.objects, function(index, element) {
-                                  var display_ip = display_desc = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_lastseen = display_lastSeenBy = display_reporters = "";
+	                            $.each(parsed_json.outputData, function(index, element) {
+                                  var display_ip = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_lastseen = display_lastSeenBy = display_reporters = DST_Port = SRC_Port = Protocol = display_event = "";
 
-	                                display_ip = element.ip;
-	                                display_desc = element.description;
+                                  display_City = element.City;
+                                  display_State = element.State;
+                                  display_Country = element.Country;
+                                  display_ip = element.IPaddress;
+
+                                  display_lastseen = new Date(element.lastTimeReceived);
+                                  display_reporters = element.numberOfReporters;
+                                  display_timesSeen = element.numberOfTimesSeen;
+                                  display_size_bps = element.totalBytesSent;
+                                  display_size_pps = element.totalPacketsSent;
+
+/*
+                                  display_asn_num = element1.value;
+                                  if (element1.value != 'UNRESOLVED') {
+                                     display_asn_name = element1.value;
+                                  }
+*/
 	                                //-- sub objects --
-	                                $.each(element.objects, function(index1, element1) {
-	                                	 if (element1.type != '') {
-	                                		 switch(element1.type) {
-	                                		    case "Last Time Received":
-	                                		    	//display_lastseen = element1.value;
-                                            display_lastseen = new Date(element1.value);
-                                            break;	   
-                                          case "Reported By":
-                                            display_lastSeenBy = element1.value;
-                                            break;
-	                                		    case "Number of Times Seen":
-	                                		    	display_timesSeen = element1.value;
-	                                		      break;
-                                          case "Total Bytes Sent":
-                                            display_size_bps = element1.value;
-                                            break;
-                                          case "Total Packets Sent":
-                                          	display_size_pps = element1.value;
-                                            break;
-                                          case "AS Number":
-                                          	display_asn_num = element1.value;
-                                            break;
-                                          case "AS Name":
-                                            if (element1.value != 'UNRESOLVED') {
-                                          	   display_asn_name = element1.value;
-                                            }
-                                            break;
-                                          case "Number of Reporters":
-                                          	display_reporters = element1.value;
-                                            break;
-                                          case "City":
-                                            display_City = element1.value;
-                                            break;
-                                          case "State":
-                                            display_State = element1.value;
-                                            break;
-                                          case "Country":
-                                          	display_Country = element1.value;
-                                            break;
-	                                		 }
-	                                		 display_asn = display_asn_num + ' ' + display_asn_name;
-	                                		 display_location = display_City + ', ' + display_State + '<br />' + display_Country;
-	                                		 display_size = display_size_bps + " Bps / " + display_size_pps + " Pps";
-	                                		 display_Saw = display_lastseen + " <br /> By: " + display_lastSeenBy + " - " + display_reporters + " reporter(s)";
-	                                	 } 
-	                                });
+	                                $.each(element.events, function(index1, element1) {
+                                      if (element.destinationPort) {
+                                          DST_Port = element.destinationPort;
+                                          display_event += "DST: " + DST_Port + " ";
+                                      }
+
+                                      if (element.sourcePort) {
+                                          SRC_Port = element.sourcePort;
+                                          display_event += "SRC: " + SRC_Port + " ";
+                                      }
+
+                                      if (element.protocol) {
+                                          Protocol = element.protocol;
+                                          display_event += " " + Protocol + " ";
+                                      }
+                                      display_event += "<br />";
+
+                                  });
+
+                                  $.each(element.reportedBy, function(index2, element2) {
+                                    display_lastSeenBy += element2;
+                                  });
+
+                                  display_asn = display_asn_num + ' ' + display_asn_name;
+                                  display_location = display_City + ', ' + display_State + '<br />' + display_Country;
+                                  display_size = display_size_bps + " Bps <br />" + display_size_pps + " Pps";
+                                  display_Saw = display_lastseen + " <br /> By: " + display_lastSeenBy + " - " + display_reporters + " reporter(s)";
+                                  
 	                                //--- populate table ---
 	                                t1.row.add( [
 	                                	display_ip,
@@ -250,7 +248,7 @@
 	                                	display_size,
 	                                	display_timesSeen,
 	                                	display_Saw,
-	                                	display_desc
+	                                	display_event
 	                                ] ).draw( false );
 	                            });
 	                            $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Loaded (" + CurrentDateTime() + ")</div>");

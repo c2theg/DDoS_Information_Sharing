@@ -1,0 +1,301 @@
+<!DOCTYPE html><!--[if lt IE 9]><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"><![endif]--><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Copyright (c) 2017 Christopher MJ Gray - Updated  6/13/2017 07:49:06 EST" /><META NAME="application-name" CONTENT="DDoS Information Sharing" /><META NAME="ROBOTS" CONTENT="NO-INDEX, NO-FOLLOW"><meta name="generator" content="By hand!"><meta name="description" content="DDoS Information Sharing"><meta name="keyword" content="ddos"><meta http-equiv="refresh" content="3600">
+    <link rel="icon" href="https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/images/favicon.ico">
+    <title>DDoS Information Sharing</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"><link href="https://getbootstrap.com/examples/dashboard/dashboard.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet">
+  </head><body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.6</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#" data-toggle="modal" data-target="#modal_Settings"> Settings </a></li>
+            <li><a href="https://github.com/c2theg/DDoS_Information_Sharing/blob/master/README.md" target="_blank"> Help </a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li><a href="client.html">Bad IP's</a></li>
+            <li class="active"><a href="client_submissions.html">Uploaded IP's <span class="sr-only">(current)</span></a></li>
+          </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h1 class="page-header">Submitted IP's - Dashboard  <button class="btn btn-default" id="btn_refresh" name="btn_refresh" type="button"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button> <span id="lbl_status_main"></span></h1>
+          <span id="lbl_status_minor"></span><span id="lbl_status_refesh"></span>
+
+          <h3 class="sub-header">Attacking Source IP's (Only showing the last: <span id="lbl_limit"></span>)</h2>
+          <div class="table-responsive">
+            <table id="tbl_sources" class="table table-striped table-bordered table-hover table-condensed" cellspacing="0" width="100%">
+              <thead>
+                <tr>
+                  <th>IP Address</th>
+                  <th>AS Info</th>
+                  <th>Location</th>
+                  <th>Size</th>
+                  <th>Occurred</th>
+                  <th>Last Seen by</th>
+                  <th>Info</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+	    
+	<!-- Modals -->
+	<div class="modal fade" id="modal_Settings" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Settings</h4>
+	      </div>
+	      <div class="modal-body">
+	
+	        <h3>CRIT's Login Info</h3>
+	        <table class="table table-bordered table-condensed table-hover table-striped">
+	          <tbody>
+	            <tr>
+	              <td>URL: </td>
+	              <td><input type="text" name="txt_url" id="txt_url" placeholder="" value="https://dis-demo2.cablelabs.com/api/v1/ips/"></td>
+	            </tr>
+	            <tr>
+	              <td>Username: </td>
+	              <td><input type="text" name="txt_userid" id="txt_userid" placeholder="" value=""></td>
+	            </tr>
+	            <tr>
+	              <td>API Key: </td>
+	              <td><input type="text" name="txt_apikey" id="txt_apikey" placeholder="" value=""></td>
+	            </tr>
+	            <tr>
+	              <td>Default Row Limit: </td>
+	              <td><input type="text" name="txt_resultLimit" id="txt_resultLimit" placeholder="" value="30"></td>
+	            </tr>            
+	          </tbody>
+	        </table>
+	           
+	        <h3>General</h3>          
+	        <table class="table table-bordered table-condensed table-hover table-striped">
+	          <tbody>
+	            <tr>
+	              <td>Refresh Interval: (seconds) </td>
+	              <td><input type="text" name="txt_refreshInt" id="txt_refreshInt" placeholder="" value="300"></td>
+	            </tr>
+	          </tbody>
+	        </table>
+	
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-success" id="btn_saveSettings" name="btn_saveSettings"> <span class="i-cloud-upload" aria-hidden="true"></span> Save </button>
+	      </div>
+	    </div>
+	  </div>
+	</div>  
+    <!-- --------------------------------------------------------------------------------------------------------- -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script><script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript">
+        var data = IS_User = IS_Key = IS_URL = IS_Limit = '';
+	    /* --------------------------------------------------------------------------------------------------------- */
+        $(document).ready(function() {
+        	// instantiate datatable
+            var t1 = $('#tbl_sources').DataTable( {
+                "order": [[ 4, "desc" ]],
+                "pageLength": 50,
+                "columns": [
+                    { "width": "10%" },
+                    { "width": "10%" },
+                    { "width": "20%" },
+                    { "width": "10%" },
+                    { "width": "5%" },
+                    { "width": "28%" },
+                    null
+                  ]
+            });
+         	//----------- init Load of Settings ------------------
+            load_CritsDB();
+            /* --------------------------------------------------------------------------------------------------------- */
+        	$('#btn_refresh').click(function(e) {
+            load_CritsDB();
+          });
+            
+          $('#btn_saveSettings').click(function(e) {
+              localStorage.IS_URL = $("#txt_url").val();
+            	localStorage.IS_User = $("#txt_userid").val();
+            	localStorage.IS_Key = $("#txt_apikey").val();
+            	localStorage.IS_Limit = $("#txt_resultLimit").val();
+            	localStorage.IS_Refresh = $("#txt_refreshInt").val();
+            	$('#modal_Settings').modal('hide');            	
+              load_CritsDB();
+            });
+
+        	function load_CritsDB() {
+                if (typeof(Storage) !== "undefined") {
+                    if (localStorage.IS_User) {
+                        IS_URL = localStorage.IS_URL;
+                        IS_User = localStorage.IS_User;
+                        IS_Key = localStorage.IS_Key;
+                        IS_Limit = localStorage.IS_Limit;
+                        IS_Refresh = localStorage.IS_Refresh;
+                        
+                        $("#txt_url").val(IS_URL);
+                        $("#txt_userid").val(IS_User);
+                        $("#txt_apikey").val(IS_Key);
+                        $("#txt_resultLimit").val(IS_Limit); 
+                        $("#txt_refreshInt").val(IS_Refresh);
+                        $("#lbl_limit").html(IS_Limit);
+                        //console.log('values are set!');
+                    } else {
+                        $('#modal_Settings').modal('show');
+                    }           
+                } else {
+                    alert("Sorry! No Web Storage support..");
+                }
+                if (localStorage.IS_URL) {
+	                $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-info' role='alert'><img src='https://bit.ly/cgray-loader4' alt='loading' /> Gathering Data from: " + IS_URL + " - Username: " + IS_User + "</div>");
+	                $.ajax({
+	                    url: IS_URL + "/api/v1/ips/?",
+	                    dataType: "text",
+	                    type: 'GET',
+	                    data: {
+	                        username: IS_User,
+	                    	api_key: IS_Key,
+	                    	limit: IS_Limit
+	                    },
+	                    success: function(data) {
+	                    	var parsed_json = sub_objects = '';
+                            t1.clear(); // clear table
+	                        
+	                        $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Processing... <img src='https://bit.ly/cgray-loader4' alt='loading' /> </div>");
+	                        //console.log(data);
+	                        if (data != '') {
+	                        	parsed_json = JSON.parse(data);
+	                            $.each(parsed_json.objects, function(index, element) {
+                                  var display_ip = display_desc = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_lastseen = display_lastSeenBy = display_reporters = "";
+
+	                                display_ip = element.ip;
+	                                display_desc = element.description;
+	                                //-- sub objects --
+	                                $.each(element.objects, function(index1, element1) {
+	                                	 if (element1.type != '') {
+	                                		 switch(element1.type) {
+	                                		    case "Last Time Received":
+	                                		    	//display_lastseen = element1.value;
+                                            display_lastseen = new Date(element1.value);
+                                            break;	   
+                                          case "Reported By":
+                                            display_lastSeenBy = element1.value;
+                                            break;
+	                                		    case "Number of Times Seen":
+	                                		    	display_timesSeen = element1.value;
+	                                		      break;
+                                          case "Total Bytes Sent":
+                                            display_size_bps = element1.value;
+                                            break;
+                                          case "Total Packets Sent":
+                                          	display_size_pps = element1.value;
+                                            break;
+                                          case "AS Number":
+                                          	display_asn_num = element1.value;
+                                            break;
+                                          case "AS Name":
+                                            if (element1.value != 'UNRESOLVED') {
+                                          	   display_asn_name = element1.value;
+                                            }
+                                            break;
+                                          case "Number of Reporters":
+                                          	display_reporters = element1.value;
+                                            break;
+                                          case "City":
+                                            display_City = element1.value;
+                                            break;
+                                          case "State":
+                                            display_State = element1.value;
+                                            break;
+                                          case "Country":
+                                          	display_Country = element1.value;
+                                            break;
+	                                		 }
+	                                		 display_asn = display_asn_num + ' ' + display_asn_name;
+	                                		 display_location = display_City + ', ' + display_State + '<br />' + display_Country;
+	                                		 display_size = display_size_bps + " Bps / " + display_size_pps + " Pps";
+	                                		 display_Saw = display_lastseen + " <br /> By: " + display_lastSeenBy + " - " + display_reporters + " reporter(s)";
+	                                	 } 
+	                                });
+	                                //--- populate table ---
+	                                t1.row.add( [
+	                                	display_ip,
+	                                	display_asn,
+	                                	display_location,
+	                                	display_size,
+	                                	display_timesSeen,
+	                                	display_Saw,
+	                                	display_desc
+	                                ] ).draw( false );
+	                            });
+	                            $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-success' role='alert'>Loaded (" + CurrentDateTime() + ")</div>");
+	                        }
+	                    },
+	                    parsererror: function(data) {
+	                        $('#lbl_status_minor').html("<div class='alert alert-info' role='alert'> Ajax load error. Returned: " + data + "</div>");
+	                    },
+	                    timeout: function(data) {
+	                        $('#lbl_status_minor').html("<div class='alert alert-info' role='alert'>Timeout. Returned: " + data + "</div>");
+	                    },
+	                    notmodified: function(data) {
+	                        $('#lbl_status_minor').html("<div class='alert alert-info' role='alert'> <i aria-hidden='true' class='i-warning'></i> Not Modified. Returned: " + data + "</div>");
+	                    },
+	                    error: function (xmlHttpRequest, textStatus, errorThrown) {
+	                        $('#lbl_status_minor').html("<div class='alert alert-danger' role='alert'>AJAX Error - Data Returned: " + data + ", XHR: " + xmlHttpRequest + ", Status: " + textStatus + ", Error: " + errorThrown + " Stringified: " + JSON.stringify(data) + " (" + CurrentDateTime() + ")</div>");
+	                        //alert("Error AJAX - Data Returned: " + data + ", XHR: " + xmlHttpRequest + ", Status: " + textStatus + ", Error: " + errorThrown + " Stringified: " + JSON.stringify(data));
+	                    }
+	                });  // end of ajax call
+	            } else {
+                    $('#lbl_status_minor').fadeTo("fast",100).html("<div class='alert alert-danger' role='alert'><img src='https://bit.ly/cgray-img-error' alt='error' /> Please edit the code and enter your CRITS Username and Api Key</div>");
+	           }
+        	}
+        	/* --------------------------------------------------------------------------------------------------------- */
+            if (localStorage.IS_Refresh) {
+	        	setInterval(function(){
+	        		//alert("loading crits from timer");
+	        		console.log("loading crits from timer");
+	        		load_CritsDB();
+	        	}, (parseInt(IS_Refresh) * 1000));
+            }
+        	
+            function CurrentDateTime() {
+                var currentdate = new Date(); 
+            	var datetime = "Last Sync: " 
+        	        + (currentdate.getMonth()+1)  + "/"
+        	        + currentdate.getDate() + "/"        	        
+        	        + currentdate.getFullYear() + " @ "  
+        	        + currentdate.getHours() + ":"  
+        	        + currentdate.getMinutes() + ":" 
+        	        + currentdate.getSeconds();  
+        	    return datetime;
+            }
+        }); /* --- End jQuery --- */
+    </script>
+</body></html>
