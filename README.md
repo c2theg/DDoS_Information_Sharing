@@ -39,8 +39,8 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
 
 
                    DDoS Source Information Sharing - Data Collector
-                                    Version: 0.2.27
-                                       6/9/2017
+                                    Version: 0.2.31
+                                       6/23/2017
                     https://github.com/c2theg/DDoS_Infomation_Sharing
                     
 ------------------------------------------------------------------------------------------------
