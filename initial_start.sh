@@ -80,13 +80,13 @@ wait
 #mkdir maxmind
 #cd ..
 #-----------------
-#sudo chmod g-wx,o-wx ~/.python-eggs
-#wait
 #----- Cronjob to download/update Maxmind db ------
-#write out current crontab
-  #crontab -l > mycron
-#echo new cron into cron file
-   #echo "20 4 * */1 3 echo $MyPath/geoipdb_updater.sh" >> mycron
+write out current crontab
+  crontab -l > mycron
+echo new cron into cron file
+echo "@reboot /usr/bin/sudo python2 $MyPath/collector.py -c $MyPath/config.json &" >> mycron
+
+#echo "20 4 * */1 3 echo $MyPath/geoipdb_updater.sh" >> mycron
 #echo "20 4 * */1 3 echo $MyPath/updater.sh" >> mycron
 #install new cron file
    #crontab mycron
@@ -96,4 +96,4 @@ wait
    #sudo sh ./geoipdb_updater.sh
    #wait
 echo "All done...   Starting DDoS Infomation Sharing application!"
-sudo python ./collector.py
+sudo python2 ./collector.py -c $MyPath/config.json -v arbor
