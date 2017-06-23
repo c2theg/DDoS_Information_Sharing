@@ -83,12 +83,14 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
         
         The syslog collector application should be ran at all times. The following are examples on how to start it automatically at system startup, in a crontab.
         
-        
-        @reboot python /home/ubuntu/collector.py > /dev/null &
+        crontab -e
+        @reboot /usr/bin/sudo python2 /home/ubuntu/DDoS/collector.py -c /home/ubuntu/DDoS/config.json &
+
+  
     
         You can launch the app by issuing the following command, in an Ubuntu Linux ssh window (i used putty)
     
-        python ./collector.py
+        python2 ./collector.py -c /home/ubuntu/DDoS/config.json
     
  ------------------------------------------------------------------------------------------------
     2) GetSources application
@@ -100,7 +102,7 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
         getSources.py takes in 1 parameter. Which is the arbor alert id.
         Here is an example on how to run it directly.
         
-        python ./getSources.py 123456
+        python2 ./getSources.py -c /home/ubuntu/DDoS/config.json -a 123456
     
  ------------------------------------------------------------------------------------------------
     3) Client Config
