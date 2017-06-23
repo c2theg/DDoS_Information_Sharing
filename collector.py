@@ -13,8 +13,9 @@ import argparse
 from datetime import datetime
 #-----------------------------------------------------------------------------------------------------------------------------------------------------
 appTime = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-appVersion = '0.1.17'
-appCurrentPath = os.getcwd()
+appVersion = '0.1.18'
+#appCurrentPath = os.getcwd()
+appCurrentPath = os.path.dirname(os.path.realpath(__file__))
 appCurrentPath.replace("\/",'\\/')
 os.system('clear')  #clear the screen
 
@@ -173,12 +174,30 @@ while 1:
             #------------ Start Child Process ----------------------------------
             if '.py' in varSourceCollector:
                 if pathConfigFile is not None:
-                    varCommand = "python " + appCurrentPath + "/" + varSourceCollector + " -c " + pathConfigFile + " -v " + varVendor + " -a " + varAlertID
+                    varCommand = "python2 " + appCurrentPath + "/" + varSourceCollector + " -c " + pathConfigFile + " -v " + varVendor + " -a " + varAlertID + " &"
                 else:
-                    varCommand = "python " + appCurrentPath + "/" + varSourceCollector +  " " + varAlertID + " -v " + varVendor
+                    varCommand = "python2 " + appCurrentPath + "/" + varSourceCollector +  " " + varAlertID + " -v " + varVendor + " &"
             else:
                 varCommand = "./" + varSourceCollector + " " + varAlertID
 
-            print "Spawning New Process -> ",varCommand
-            p = subprocess.Popen(varCommand, bufsize=-1, shell=True, executable=None, stdin=None, stdout=None, stderr=None)
+            varAppendText = "\n Spawning New Process -> " + varCommand
+            print varAppendText
+            if varlocal_log_to_file == True:
+                with open(varLogFile, "a") as myfile:
+                    myfile.write(varAppendText)
+                    myfile.close
+            try:
+                pid = subprocess.Popen(str(varCommand), stdout=subprocess.PIPE, shell=True)
+                varAppendText = " - PID: " + str(pid) + " \n\n"
+                print varAppendText
+                if varlocal_log_to_file == True:
+                    with open(varLogFile, "a") as myfile:
+                        myfile.write(varAppendText)
+                        myfile.close                
+            except OSError:
+                varAppendText = "Error forking process. " +  str(sys.exc_info()[0]) + "\n\n"
+                print varAppendText
+                with open(varLogFile, "a") as myfile:
+                    myfile.write(varAppendText)
+                    myfile.close
 UDPSock.close()
