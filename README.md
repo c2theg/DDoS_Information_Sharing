@@ -192,7 +192,7 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
                 "a10": {
                     "version":             4.2,
                     "syslog_trigger_on":   " done ",
-                    "syslog_port":         1513,
+                    "syslog_port":         1515,
                     "syslog_proto":        "udp",    
                     "url":                 "10.1.1.1",
                     "port":                443,
@@ -206,7 +206,7 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
                 "radware": {
                     "version":             3.8,
                     "syslog_trigger_on":   " done ",
-                    "syslog_port":         1514,
+                    "syslog_port":         1516,
                     "syslog_proto":        "udp",
                     "url":                 "10.1.1.1",
                     "port":                443,
@@ -220,7 +220,7 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
                 "f5": {
                     "version":             12.2,
                     "syslog_trigger_on":   " Attack Stopped ",
-                    "syslog_port":         1515,
+                    "syslog_port":         1517,
                     "syslog_proto":        "udp",    
                     "url":                 "10.1.1.1",
                     "port":                443,
