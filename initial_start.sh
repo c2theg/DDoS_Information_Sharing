@@ -67,32 +67,20 @@ sudo chmod -R u+x .
 # sudo chmod -R 755 . && sudo chown -R ubuntu:ubuntu .
 wait
 #------ Make Directory structures -----
-#SDKpath="$(pwd)/SDKs"
-#mkdir $SDKpath
-#cd $SDKpath/
-#mkdir 7.6/
-#cd ..
+SDKpath="$(pwd)/SDKs"
+mkdir $SDKpath
+cd $SDKpath/
+mkdir 7.6/
+
+cd ..
 #-----------------
 #mkdir libraries
 #cd libraries/
 #mkdir maxmind
 #cd ..
-#-----------------
-#----- Cronjob to download/update Maxmind db ------
-write out current crontab
-  crontab -l > mycron
-echo new cron into cron file
-echo "@reboot /usr/bin/sudo python2 $MyPath/collector.py -c $MyPath/config.json &" >> mycron
-
-#echo "20 4 * */1 3 echo $MyPath/geoipdb_updater.sh" >> mycron
-#echo "20 4 * */1 3 echo $MyPath/updater.sh" >> mycron
-#install new cron file
-   #crontab mycron
-   #rm mycron
-#----- Done -----
-   #echo "Running GeoIP db updater"
-   #sudo sh ./geoipdb_updater.sh
-   #wait
+#----- Cronjob to update scripts ------
+line="@reboot /usr/bin/sudo python2 $MyPath/collector.py -c $MyPath/config.json &"
+(sudo crontab -u root -l; echo "$line" ) | sudo crontab -u root -
 #----------------
 wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh
 wait
