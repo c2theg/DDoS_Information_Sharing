@@ -67,6 +67,7 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
        DONE! Wasn't that easy?!?!
           
   *** FOR QUICK UPDATING (once you already had it running) ***
+     
      sudo ./updater.sh
          
 PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files to download, as the application continue's to evolve.
