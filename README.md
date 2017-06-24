@@ -51,8 +51,9 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
     4) Arbor SP config
     5) CableLabs - Crits message information    
     6) General Info
-    7) Copyright Notice
-    8) References
+    7) Troubleshooting
+    8) Copyright Notice
+    9) References
 
 ------------------------------------------------------------------------------------------------
     0) TL;DR:  - Gimme Gimme Gimme
@@ -334,9 +335,20 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
         You can get new releases of the database at: https://dev.maxmind.com/geoip/legacy/geolite/
         
         This app also uses suds 0.4 - 0.6 https://pypi.python.org/pypi/suds for SOAP integrations.
+------------------------------------------------------------------------------------------------
+    7) Troubleshooting
+    
+      Check if the port is open: 
+          netstat -tulnp | grep 1514
+        
+      Check to see if your getting data:  
+          tcpdump udp -i any -nn -t -v dst port 1514
+          
+      Show Processes:  (nicer version of top)
+          htop 
 
 ------------------------------------------------------------------------------------------------
-    7) Copyright
+    8) Copyright
         
         Copyright © 2016-2017 by Christopher MJ Gray & Daniel Phan    
         
@@ -353,7 +365,7 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
         I will update this documentation with those who would like to be named, contact information. 
         
 ------------------------------------------------------------------------------------------------
-    8) References
+    9) References
     
         Cable Labs 
             https://cablelabs.github.io/ddos-info-sharing/
