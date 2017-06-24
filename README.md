@@ -61,18 +61,22 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
         2) When you're done with that, and you setup Arbor SP (Section 4) to send the syslog traffic to your server, just run this command
         
             wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/initial_start.sh && sudo chmod u+x ./initial_start.sh && sudo ./initial_start.sh
-            
-        3) *** FOR QUICK UPDATING (once you already had it running) ***
-         sudo ./updater.sh
          
-         PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files to download, as the application continue's to evolve.
+        
+        
+       DONE! Wasn't that easy?!?!
+          
+  *** FOR QUICK UPDATING (once you already had it running) ***
+     sudo ./updater.sh
          
-        2 cronjobs are added to the server. 
+PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files to download, as the application continue's to evolve.
+        
+     2 cronjobs are added to the server. 
           1) to start collector.py on startup, 
           2) to run updater.py every 10 days. 
               - Incase you want to know when this is ran, a line above it can be un-remmed, to send an email. (You will have to configure SMTP on your server for this to work)
          
-        DONE! Wasn't that easy?!?!
+      
         Ok now that it's all done and running, move on to read the rest. (Please) 
 ------------------------------------------------------------------------------------------------ 
     1) Collector application
