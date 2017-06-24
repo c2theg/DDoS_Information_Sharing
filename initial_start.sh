@@ -47,6 +47,8 @@ sudo easy_install https://pypi.python.org/packages/bd/6f/54fbf0999a606680d27c69b
 wait
 sudo pip --upgrade install
 wait
+sudo pip install --upgrade pip
+wait
 #-- GeoIP --
 # https://pypi.python.org/pypi/geoip2
 #sudo -E apt-cache search geoip
