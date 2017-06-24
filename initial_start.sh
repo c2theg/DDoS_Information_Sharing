@@ -26,6 +26,8 @@ sudo -E apt-get update
 wait
 sudo -E apt-get -y upgrade
 wait
+sudo apt-get -y autoremove
+wait
 #-- Upgrade to latest Kernal --
 sudo -E apt-get -y dist-upgrade
 wait
@@ -45,8 +47,6 @@ sudo easy_install https://pypi.python.org/packages/bd/6f/54fbf0999a606680d27c69b
 #sudo pip install suds-jurko
 wait
 sudo pip --upgrade install
-wait
-sudo pip install --upgrade pip
 wait
 #----- others ---
 sudo pip install requests
