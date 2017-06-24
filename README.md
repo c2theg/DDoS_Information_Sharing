@@ -60,10 +60,10 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
     
         2) When you're done with that, and you setup Arbor SP (Section 4) to send the syslog traffic to your server, just run this command
         
-            sudo chmod u+x ./initial_start.sh && ./initial_start.sh
+            wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/initial_start.sh && sudo chmod u+x ./initial_start.sh && sudo ./initial_start.sh
             
         3) *** FOR QUICK UPDATING (once you already had it running) ***
-         sudo wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh && sudo chmod u+x updater.sh && sudo ./updater.sh
+         sudo ./updater.sh
          
          PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files to download, as the application continue's to evolve.
          
@@ -98,7 +98,10 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
         Arguments sent to it.  getSources.py can also be run directly by the user, for debugging and testing. The config.json file has a few options for debugging, and logging
         Locally to view the output it is sending to the remote collection server.
 
-        getSources.py takes in 1 parameter. Which is the arbor alert id.
+        getSources.py takes in 3 parameters. 
+           -c <CONFIG.JSON URL>
+           -v (Vendor  - Arbor is the only one currently)
+           -a (Alert ID)
         Here is an example on how to run it directly.
         
         python2 ./getSources.py -c /home/ubuntu/DDoS/config.json -v arbor -a 123456
@@ -120,69 +123,117 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
                 
             identity ->
                 name (your company name. IMPORTANT, needs to be the same as in the CRITS database)
-                asn  (Just the number. no need for the as prefix. e.g.: "AS1234")
+                asn  (Just the number. no need for the as prefix. e.g.: "1234")
                 
         I will try not to add too much to the config over time, but this is beta, so the config might change overtime.         
         
-        The following is the default config:
+        The following is the default config:   
         
-        {
-            "local": {
-                "syslog_port":  	 1514,
-                "syslog_proto": 	 "udp",
-                "output_debug": 	 false,
-                "log_to_file":  	 false,
-                "log_file":     	 "/var/log/ddos_infosharing_log.txt",
-                "wait_before_pull":  2,
-                "timezone":     	 "America/New_York",
-                "syslog_trigger_on": ", is now done,",
-                "source_collector":  "getSources.py",
-                "proxy":             false,
-                "proxy_username":    "",
-                "proxy_passwd":      "",
-                "proxy_url":         "",
-                "proxy_port":        "",
-                "auto_updates":		 false,
-                "updates_url":		 "https://github.com/c2theg/DDoS_Infomation_Sharing/archive/master.zip",
-                "update_checkEvery": "5d"
-            },
-            "email": {
-                "server":   "mailrelay.server.com",
-                "port":     465,
-                "auth":     false,
-                "username": "",
-                "passwd":   "",
-                "from":     "",
-                "to":       "",
-                "cc":       "",
-                "bcc":      ""
-            },
-            "remote": [ 
-                {"url": "https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "format": "json", "send_infoshare": true, "send_alert": false, "send_mit": false, "extra": "" }
-            ],
-            "geo": {
-                "files_path": 	"libraries/maxmind/",
-                "update_url": 	"http://dev.maxmind.com/geoip/legacy/geolite/"
-            },
-            "arbor": {
-                "url":      	"192.168.1.2",
-                "port":     	443,
-                "key":      	"<ARBOR_KEY>",
-                "version":  	7.6,
-                "user":     	"arbor",
-                "zone_secret":  "<PASSWORD>",
-                "wsdl":     	"PeakflowSP.wsdl"
-            },
-            "identity": {
-                "company_type": "isp",
-                "name":         "<COMPANY NAME>",
-                "asn":          1234,
-                "domain":       "<Company URL>.com",
-                "callback_url": ""
+            {
+                "identity": {
+                    "company_type": "isp",
+                    "name":         "<COMPANY NAME>",
+                    "asn":          1234,
+                    "domain":       "<Company URL>.com",
+                    "callback_url": ""
+                },
+                "local": {
+                    "default_vendor":   "arbor",
+                    "output_debug":     true,
+                    "wait_before_pull": 2,
+                    "timezone":         "America/New_York",
+                    "proxy":            false,
+                    "proxy_username":   "",
+                    "proxy_passwd":     "",
+                    "proxy_url":        "",
+                    "proxy_port":       "",
+                    "auto_updates":     false,
+                    "updates_url":      "https://github.com/c2theg/DDoS_Infomation_Sharing/archive/master.zip",
+                    "update_checkEvery": 5
+                },
+                "email": {
+                    "enabled":  false,
+                    "server":   "mailrelay.server.com",
+                    "port":     465,
+                    "auth":     false,
+                    "username": "",
+                    "passwd":   "",
+                    "from":     "ddos_info_sharing_1@company.com"
+                },
+                "email_recipients": [
+                    { "to": "admin@carrier.com", "name": "John Smith", "cc":"", "bcc": "", "send_info": false, "send_errors": true },
+                    { "to": "admin@carrier.com", "name": "Jane Doe", "cc":"", "bcc": "", "send_info": false, "send_errors": false }
+                ],
+                "remote": [ 
+                    { "url": "https://dis-demo2.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>", "label": "Dev", "format": "json", "send_infosharing": true, "send_details": false, "timeout": 120, "extra": "", "proto": "tcp" }
+                ],
+                "geo": {
+                    "enabled_forSending":      false,
+                    "enabled_forReceiving":    true,
+                    "files_path":              "libraries/maxmind/",
+                    "update_url":              "http://dev.maxmind.com/geoip/legacy/geolite/"
+                },
+                "arbor": {
+                    "version":             7.6,   
+                    "syslog_trigger_on":   ", is now done,",
+                    "syslog_port":         1514,
+                    "syslog_proto":        "udp",    
+                    "url":                 "10.1.1.1",
+                    "port":                443,
+                    "key":                 "<ARBOR_KEY>",
+                    "user":                "arbor",
+                    "zone_secret":         "<PASSWORD>",
+                    "wsdl":                "PeakflowSP.wsdl",
+                    "source_collector":    "getSources.py",
+                    "log_to_file":         false,
+                    "log_file":            "/var/log/ddos_infosharing_arbor_log.txt",
+                    "log_file_errors":     "/var/log/ddos_infosharing_arbor_error_log.txt" 
+                },
+                "a10": {
+                    "version":             4.2,
+                    "syslog_trigger_on":   " done ",
+                    "syslog_port":         1513,
+                    "syslog_proto":        "udp",    
+                    "url":                 "10.1.1.1",
+                    "port":                443,
+                    "user":                "a10",
+                    "password":            "<PASSWORD>",
+                    "source_collector":    "getSources_a10.py",
+                    "log_to_file":         false,
+                    "log_file":            "/var/log/ddos_infosharing_a10_log.txt",
+                    "log_file_errors":     "/var/log/ddos_infosharing_a10_error_log.txt" 
+                },
+                "radware": {
+                    "version":             3.8,
+                    "syslog_trigger_on":   " done ",
+                    "syslog_port":         1514,
+                    "syslog_proto":        "udp",
+                    "url":                 "10.1.1.1",
+                    "port":                443,
+                    "user":                "radware",
+                    "password":            "<PASSWORD>",
+                    "source_collector":    "getSources_radware.py",
+                    "log_to_file":         false,
+                    "log_file":            "/var/log/ddos_infosharing_radware_log.txt",
+                    "log_file_errors":     "/var/log/ddos_infosharing_radware_error_log.txt" 
+                },
+                "f5": {
+                    "version":             12.2,
+                    "syslog_trigger_on":   " Attack Stopped ",
+                    "syslog_port":         1515,
+                    "syslog_proto":        "udp",    
+                    "url":                 "10.1.1.1",
+                    "port":                443,
+                    "user":                "admin",
+                    "password":            "<PASSWORD>",
+                    "source_collector":    "getSources_f5.py",
+                    "log_to_file":         false,
+                    "log_file":            "/var/log/ddos_infosharing_f5_log.txt",
+                    "log_file_errors":     "/var/log/ddos_infosharing_f5_error_log.txt" 
+                }
             }
-        }
  
-------------------------------------------------------------------------------------------------        
+------------------------------------------------------------------------------------------------
     4) Arbor SP config
         
         For this to work you need to configure Arbor SP to forward SYSLOGs to the server running this script on the port and protocol defined in the config.json file.
@@ -200,21 +251,21 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
                      Importance:  medium   (High is included in medium, so no need for a separate rule)
                      Notification Group (Select the one you made in step 4)
         
-            8) Commit changes at the top.  Arbor will start forwarding traffic once completed.         
+            8) Commit changes at the top.  Arbor will start forwarding traffic once completed.
 
-------------------------------------------------------------------------------------------------        
+------------------------------------------------------------------------------------------------
     5) CableLabs - CRITS message information
 
         Information about using the DDoS Info Sharing API to upload dis-data
-        The current website is: https://dis-demo.cablelabs.com
+        The current website is: https://dis-demo2.cablelabs.com
         
         Login and get your API key, on this page: https://dis-demo.cablelabs.com/profile/#api_button
         
         API URI:
 
-        https://dis-demo.cablelabs.com/api/v1/data_ingester_resource/?username=%USERNAME%&api_key=%API_KEY%
+        https://dis-demo2.cablelabs.com/api/v1/data_ingester_resource/?username=<USER_NAME>&api_key=<API_KEY>
 
-        Replace %USERNAME% and %API_KEY% with the information sent in the email
+        Replace <USERNAME> and <API_KEY> with the information sent in the email
 
         Payload Headers:
         "Content-Type": application/json
@@ -264,18 +315,18 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
         That being said, future versions will allow you to forward more detailed data that would have attack and mitigation data, but never auth credentials, to other 3rd party sources.
         Sending of Alert and Mitigation data is OFF by default, and set on a per destination basis’s. 
         These options are OFF BY DEFAULT, and that will never change!
-------------------------------------------------------------------------------------------------        
+------------------------------------------------------------------------------------------------
     6) General Info
     
         The application was developed using python 2.7.x (2.7.6 then 2.7.12)
         The server used for testing was running Ubuntu Server 14.04.5 - x86-64 Edition
         
-        This product includes GeoLite2 data created by MaxMind, available from <a href="http://www.maxmind.com">http://www.maxmind.com</a>.        
+        This product includes GeoLite2 data created by MaxMind, available from <a href="http://www.maxmind.com">http://www.maxmind.com</a>.
         You can get new releases of the database at: https://dev.maxmind.com/geoip/legacy/geolite/
         
         This app also uses suds 0.4 - 0.6 https://pypi.python.org/pypi/suds for SOAP integrations.
 
-------------------------------------------------------------------------------------------------            
+------------------------------------------------------------------------------------------------
     7) Copyright
         
         Copyright © 2016-2017 by Christopher MJ Gray & Daniel Phan    
