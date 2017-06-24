@@ -63,18 +63,23 @@ mkdir 7.6/
 cd 7.6/
 wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/SDKs/7.6/PeakflowSP.wsdl
 wait
-cd ../../
+cd ..
+wait
+cd ..
 #-----------------
 #mkdir libraries
 #cd libraries/
 #mkdir maxmind
 #cd ..
 #----- Cronjob to update scripts ------
-line="\n\n@reboot /usr/bin/sudo python2 $MyPath/collector.py -c $MyPath/config.json &\r\n\r\n
-# Run updater every 10 days, and send output to the following email address. Just remove the # in the front
-#MAILTO='<your email here>'\r\n\r\n
-1 4 */10 * * updater.sh \r\n\r\n
-"
+line="@reboot /usr/bin/sudo python2 $MyPath/collector.py -c $MyPath/config.json &"
+(sudo crontab -u root -l; echo "$line" ) | sudo crontab -u root -
+
+echo "Run updater every 10 days, and send output to the following email address. Just remove the # in the front \r\n"
+line="#MAILTO='<your email here>'"
+(sudo crontab -u root -l; echo "$line" ) | sudo crontab -u root -
+
+line="1 4 */10 * * updater.sh"
 (sudo crontab -u root -l; echo "$line" ) | sudo crontab -u root -
 #----------------
 wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh
