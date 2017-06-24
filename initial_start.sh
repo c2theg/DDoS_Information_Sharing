@@ -17,9 +17,7 @@ Version:  0.5.4             \r\n
 Last Updated:  6/24/2017
 \r\n \r\n"
 MyPath=$(pwd)
-echo $MyPath
-
-echo "\r\n \r\n"
+echo "Working out of directory: $MyPath \r\n \r\n"
 echo "---------------------------------------------------------------------------------------------------------------"
 # -- add newer python 2.7.x repo --
 sudo -E add-apt-repository -y ppa:fkrull/deadsnakes-python2.7
@@ -69,7 +67,11 @@ cd ..
 #mkdir maxmind
 #cd ..
 #----- Cronjob to update scripts ------
-line="@reboot /usr/bin/sudo python2 $MyPath/collector.py -c $MyPath/config.json &"
+line="\n\n@reboot /usr/bin/sudo python2 $MyPath/collector.py -c $MyPath/config.json &\r\n\r\n
+# Run updater every 10 days, and send output to the following email address. Just remove the # in the front
+#MAILTO='<your email here>'\r\n\r\n
+1 4 */10 * * updater.sh \r\n\r\n
+"
 (sudo crontab -u root -l; echo "$line" ) | sudo crontab -u root -
 #----------------
 wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh
