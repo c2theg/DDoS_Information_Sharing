@@ -60,10 +60,6 @@ wait
 #----- others ---
 sudo pip install requests
 sudo pip install --upgrade requests
-#sudo easy_install hashlib
-#sudo pip install certifi
-#sudo pip install urllib3[secure]
-#sudo pip install 'requests[security]'
 #----- Done -----
 sudo chmod -R u+x .
 # sudo chmod -R 755 . && sudo chown -R ubuntu:ubuntu .
@@ -95,5 +91,15 @@ echo "@reboot /usr/bin/sudo python2 $MyPath/collector.py -c $MyPath/config.json 
    #echo "Running GeoIP db updater"
    #sudo sh ./geoipdb_updater.sh
    #wait
-echo "All done...   Starting DDoS Infomation Sharing application!"
-sudo python2 ./collector.py -c $MyPath/config.json -v arbor
+#----------------
+wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/updater.sh
+wait
+sudo chmod u+x updater.sh
+wait
+echo "Running updater to download latest build... \r\n"
+wait
+sudo ./updater.sh
+echo "\r\n \r\n"
+
+echo "All done...  To start DDoS Infomation Sharing application, enter the following: "
+echo "python2 ./collector.py -c $MyPath/config.json -v arbor"
