@@ -4,7 +4,7 @@
 # Copyright (c) 2017 Rich Compton - Charter Communications
 # All rights reserved.
 # https://github.com/c2theg/DDoS_Infomation_Sharing
-#Inital: 12/23/16  Updated: 6/23/17
+#Inital: 12/23/16  Updated: 6/24/17
 
 #--- Force Python2 as Suds 0.04 doesn't support Python3 fully as of 11/10/2016
 from socket import *
@@ -21,21 +21,15 @@ import urllib2
 import suds
 import suds.client
 #---- Custom Libraries ----
-# Add current dir to search path.
-#sys.path.insert(0, "libraries")
-#pprint(sys.path)
-#import func_REST
 from func_REST import *
-#from libraries.func_REST import *
-#import func_REST
+#from func_common import *
 cls_http = HTTP_Classes()  # instantiate HTTP REST class
 #------ Variables ------
 reload(sys)
-appVersion = '0.2.31'
+appVersion = '0.2.32'
 
 sys.setdefaultencoding('utf8')
 PythonVer = sys.version_info
-#appCurrentPath = os.getcwd()
 appCurrentPath = os.path.dirname(os.path.realpath(__file__))
 appCurrentPath.replace("\/",'\\/')
 appTime = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -110,9 +104,7 @@ try:
     #varIdentity_asn = configData['identity']['asn']
     #varIdentity_domain = configData['identity']['domain']
     #varIdentity_company_type = configData['identity']['company_type']
-    
     varRemoteURL = configData['remote']
-
 except ValueError:
     print ("Oops! had a problem with the config file", sys.exc_info()[0])
     sys.exit(0)   
@@ -177,15 +169,11 @@ if sys.version_info < (2, 7, 9):
 try:
     _create_unverified_https_context = ssl._create_unverified_context
 except AttributeError:
-    # Legacy Python that doesn't verify HTTPS certificates by default
     print "Legacy Python " + str(PythonVer) + " doesn't verify HTTPS TLS 1.0+ certificates by default."
-    #ssl._create_default_https_context = ssl._create_unverified_context  #SSL fix for python 2.7.6+
     pass
 else:
     # Handle target environment that doesn't support HTTPS verification
-    #ssl._create_default_https_context = _create_unverified_https_context
     ssl._create_default_https_context = ssl._create_unverified_context  #SSL fix for python 2.7.6+
-
 page = ''
 #-------------------------------------------------------------------------------------------------------------------------    
 print "Waiting " + str(varlocal_wait_before_pull) + " seconds before pulling data from Arbor."
@@ -315,6 +303,9 @@ try:
                 try:
                     with open(varLogFile, "a") as myfile:
                         myfile.write(json.dumps(TempOutputDict_ALL, indent=4, sort_keys=True))
+                        myfile.write("\r\nResponse was: \r\n")
+                        myfile.write(json.dumps(ProviderResponse, indent=4, sort_keys=True))
+                        myfile.write("\r\n-----------------------------------------------------\r\n")
                         myfile.close
                 except ValueError:
                     raise
