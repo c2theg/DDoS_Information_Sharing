@@ -60,7 +60,10 @@ SDKpath="$(pwd)/SDKs"
 mkdir $SDKpath
 cd $SDKpath/
 mkdir 7.6/
-cd ..
+cd 7.6/
+wget https://raw.githubusercontent.com/c2theg/DDoS_Information_Sharing/master/SDKs/7.6/PeakflowSP.wsdl
+wait
+cd ../../
 #-----------------
 #mkdir libraries
 #cd libraries/
