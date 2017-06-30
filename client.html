@@ -120,14 +120,8 @@
         var data = IS_User = IS_Key = IS_URL = IS_Limit = '';
 	    /* --------------------------------------------------------------------------------------------------------- */
         $(document).ready(function() {
-			function bytesToSize(bytes) {
-        		var sizes = ['B', 'K', 'M', 'G', 'T'];
-        		if (bytes == 0) return '0 Byte';
-        		var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-        		return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
-			};
-        		            
-        	// instantiate datatable
+	    function bytesToSize(a,b){if(0==a)return"0 Bytes";var c=1e3,d=b||2,e=["B","K","M","G","T","P","E","Z","Y"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))+" "+e[f]}
+            // instantiate datatable
             var t1 = $('#tbl_sources').DataTable( {
                 "order": [[ 4, "desc" ]],
                 "pageLength": 50,
