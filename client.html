@@ -13,7 +13,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.8</a>
+          <a class="navbar-brand" href="#">DDoS Info Sharing - Client - v0.1.9</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -45,7 +45,7 @@
               <thead>
                 <tr>
                   <th>IP Address</th>
-                  <th>AS Info</th>
+                  <!-- <th>AS Info</th> -->
                   <th>Location</th>
                   <th>Size</th>
                   <th>Occurred</th>
@@ -120,17 +120,23 @@
         var data = IS_User = IS_Key = IS_URL = IS_Limit = '';
 	    /* --------------------------------------------------------------------------------------------------------- */
         $(document).ready(function() {
+			function bytesToSize(bytes) {
+        		var sizes = ['B', 'K', 'M', 'G', 'T'];
+        		if (bytes == 0) return '0 Byte';
+        		var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+        		return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+			};
+        		            
         	// instantiate datatable
             var t1 = $('#tbl_sources').DataTable( {
                 "order": [[ 4, "desc" ]],
                 "pageLength": 50,
                 "columns": [
-                    { "width": "10%" },
-                    { "width": "10%" },
-                    { "width": "20%" },
+                    { "width": "15%" },
+                    { "width": "15%" },
                     { "width": "10%" },
                     { "width": "5%" },
-                    { "width": "28%" },
+                    { "width": "35%" },
                     null
                   ]
             });
@@ -192,58 +198,78 @@
 	                        if (data != '') {
 	                        	parsed_json = JSON.parse(data);
 	                            $.each(parsed_json.outputData, function(index, element) {
-                                  var display_ip = display_location = display_size = display_size_bps = display_size_pps = display_Saw = display_asn = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_lastseen = display_lastSeenBy = display_reporters = DST_Port = SRC_Port = Protocol = display_event = "";
+									var display_ip = display_location = display_size_agg = display_size_total = display_size_peak = display_Saw = display_asn = display_asn_num = display_asn_name = display_timesSeen = display_City = display_State = display_Zip = display_Country = display_lastseen = display_lastSeenBy = display_reporters = DST_Port = SRC_Port = Protocol = display_event = "";
 
-                                  display_City = element.City;
-                                  display_State = element.State;
-                                  display_Country = element.Country;
-                                  display_ip = element.IPaddress;
+									if(typeof element.City !== "undefined") {
+                                  		display_City = element.City;
+									}
 
-                                  display_lastseen = new Date(element.lastTimeReceived);
-                                  display_reporters = element.numberOfReporters;
-                                  display_timesSeen = element.numberOfTimesSeen;
-                                  display_size_bps = element.totalBytesSent;
-                                  display_size_pps = element.totalPacketsSent;
+									if(typeof element.State !== "undefined") {
+										if (display_City != '') { display_State = ", "; }
+                                  		display_State += element.State;
+									}
 
-/*
-                                  display_asn_num = element1.value;
-                                  if (element1.value != 'UNRESOLVED') {
-                                     display_asn_name = element1.value;
-                                  }
-*/
-	                                //-- sub objects --
+									if(typeof element.Country !== "undefined") {
+										if (display_State != '') { display_Country = "<br />"; }
+                                  		display_Country += element.Country;
+									}
+									
+                                  	display_ip = element.IPaddress;
+                                  	display_lastseen = new Date(element.lastTimeReceived);
+                                  	display_reporters = element.numberOfReporters;
+                                  	display_timesSeen = element.numberOfTimesSeen;
+
+                                  	//-- sub objects --
 	                                $.each(element.events, function(index1, element1) {
-                                      if (element.destinationPort) {
-                                          DST_Port = element.destinationPort;
-                                          display_event += "DST: " + DST_Port + " ";
-                                      }
+	                                	if(typeof element1.aggregateBytesPerSecond !== "undefined") {
+	                                  		display_size_agg += "Agg: " + bytesToSize(element1.aggregateBytesPerSecond) + "bps / " + element1.aggregatePacketsPerSecond + "pps";
+	                                  	}
+		                              	//----------------------------------------------------------------------------
+									  	if(typeof element1.totalBytesSent !== "undefined") {
+									  		if (display_size_agg != '') { display_size_agg += "<br />"; }
+											display_size_total += "Total: " + bytesToSize(element1.totalBytesSent) + "bps / " + element1.totalPacketsSent + "pps";
+		                              	}
+		                              	//----------------------------------------------------------------------------
+		                              	if(typeof element1.peakBPS !== "undefined") {
+		                              		if (display_size_total != '') { display_size_total += "<br />"; }
+		                              		display_size_peak = "Peak: " + bytesToSize(element1.peakBPS) + "bps / " + element1.peakPPS + "pps";
+		                              	}
+	 	                                //----------------------------------------------------------------------------
+		                              	if(typeof element1.attackTypes !== "undefined") {
+		                              		if (display_event != '') { display_event += "<br />"; }
+		                              		display_event = element1.attackTypes;
+		                              	}
+		                              	
+										if (element.destinationPort) {
+                                        	DST_Port = element1.destinationPort;
+                                          	display_event += "DST: " + DST_Port + " ";
+                                      	}
 
-                                      if (element.sourcePort) {
-                                          SRC_Port = element.sourcePort;
-                                          display_event += "SRC: " + SRC_Port + " ";
-                                      }
+                                      	if (element.sourcePort) {
+                                          	SRC_Port = element1.sourcePort;
+                                          	display_event += "SRC: " + SRC_Port + " ";
+                                      	}
 
-                                      if (element.protocol) {
-                                          Protocol = element.protocol;
-                                          display_event += " " + Protocol + " ";
-                                      }
-                                      display_event += "<br />";
-
+                                      	if (element.protocol) {
+                                        	Protocol = element1.protocol;
+                                          	display_event += " " + Protocol + " ";
+                                      	}
+                                      	display_event += "<br />";
                                   });
 
                                   $.each(element.reportedBy, function(index2, element2) {
-                                    display_lastSeenBy += element2;
+                                    display_lastSeenBy += element2 + ', ';
                                   });
-
+                                  display_lastSeenBy = display_lastSeenBy.substring(0, display_lastSeenBy.length - 2);
+                                  
                                   display_asn = display_asn_num + ' ' + display_asn_name;
-                                  display_location = display_City + ', ' + display_State + '<br />' + display_Country;
-                                  display_size = display_size_bps + " Bps <br />" + display_size_pps + " Pps";
+                                  display_location = display_City + display_State + display_Country;
+                                  display_size = display_size_agg + display_size_total + display_size_peak;
                                   display_Saw = display_lastseen + " <br /> By: " + display_lastSeenBy + " - " + display_reporters + " reporter(s)";
                                   
 	                                //--- populate table ---
-	                                t1.row.add( [
+									t1.row.add( [
 	                                	display_ip,
-	                                	display_asn,
 	                                	display_location,
 	                                	display_size,
 	                                	display_timesSeen,
