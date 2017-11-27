@@ -290,7 +290,7 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
                     "attackStartTime": "2017-11-27T03:17:45z",
                     "attackStopTime": "2017-11-27T03:25:36z",
                     "attackTypes": [
-                        "IP Fragmentation"
+                        "IP Fragmentation", "Total Traffic", "UDP", "DNS Amplification"
                     ],
                     "peakBPS": 179915,
                     "peakPPS": 14
@@ -300,7 +300,7 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
                     "attackStartTime": "2017-11-27T03:17:45z",
                     "attackStopTime": "2017-11-27T03:25:36z",
                     "attackTypes": [
-                        "IP Fragmentation"
+                        "IP Fragmentation", "Total Traffic", "UDP", "DNS Amplification"
                     ],
                     "peakBPS": 1269915,
                     "peakPPS": 163
