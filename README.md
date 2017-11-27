@@ -281,34 +281,29 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
         "Content-Type": application/json
 
         Payload Body:
+        
         {
-            "ProviderASN": 1234,
             "ProviderName": "SomeISP",
-            "company_type": "isp",
             "dis-data": [
                 {
-                    "AttackType": "IP Fragmentation",
-                    "City": "Columbus",
-                    "Country": "NJ",
-                    "Extra": "00.0000,00.0000",
                     "IPaddress": "192.168.1.1",
-                    "SourceASN": "54321",
-                    "SourceASNName": "Big Company LLC",
-                    "State": "CA",
-                    "TotalBPS": 322439,
-                    "TotalPPS": 27
+                    "attackStartTime": "2017-11-27T03:17:45z",
+                    "attackStopTime": "2017-11-27T03:25:36z",
+                    "attackTypes": [
+                        "IP Fragmentation"
+                    ],
+                    "peakBPS": 179915,
+                    "peakPPS": 14
                 },
                 {
-                    "AttackType": "IP Fragmentation",
-                    "City": "Moscow",
-                    "Country": "RU",
-                    "Extra": "42.6666984558,21.1667003632",
                     "IPaddress": "10.1.1.1",
-                    "SourceASN": "39237",
-                    "SourceASNName": "I.T.S",
-                    "State": "00",
-                    "TotalBPS": 163841,
-                    "TotalPPS": 13
+                    "attackStartTime": "2017-11-27T03:17:45z",
+                    "attackStopTime": "2017-11-27T03:25:36z",
+                    "attackTypes": [
+                        "IP Fragmentation"
+                    ],
+                    "peakBPS": 1269915,
+                    "peakPPS": 163
                 }
             ]
         }
