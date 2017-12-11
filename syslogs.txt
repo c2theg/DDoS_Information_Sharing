@@ -1,13 +1,10 @@
 From Arbor SP 7.6
 
-
 Start
 <24>Sep 27 00:05:26 pfsp: Host Detection alert #9209187, start 2016-09-27 00:04:45 GMT, duration 41, direction incoming, host 192.168.1.2, signatures (IP Fragmentation, Total Traffic, UDP), impact 1.66 Gbps/153.54 Kpps, importance 1, managed_objects ("DDoS CPE Philadelphia"), (parent managed object "nil")
 
-
 Ongoing (Heartbeat)
 <25>Sep 25 17:56:42 pfsp: anomaly UDP_Misuse id 2328354 status ongoing severity 1 classification low impact "74.81 Mbps/43.89 Kpps" src 0.0.0.0/0 "All" dst 74.1.1.4/32 "DDoS CPE Central PA" start 2014-09-25 17:55:05 +0000 duration 58 percent 62.700000 rate 70000 rateUnit pps protocol udp flags nil url https://arbor/page?id=alert_view&alert_id=2328354, (managed object "DDoS CPE Central PA"), (parent managed object "nil"), (Router "nil"), (Interface "nil")
-
 
 Stop
 <24>Nov 27 03:25:41 pfsp: Host Detection alert #18892232, start 2017-11-27 03:14:45 GMT, duration 651, stop incoming GMT, , importance 2, managed_objects ("DDoS CPE Central PA"), is now done, (parent managed object "nil")
