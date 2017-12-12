@@ -256,8 +256,8 @@ try:
                         #------- Sub Group -----------------------------------------
                         TempOutputDictEvent = {}
                         TempOutputDictEvent['IPaddress'] = CleanIP
-                        TempOutputDictEvent['attackStartTime'] = attackStarted + 'z'
-                        TempOutputDictEvent['attackStopTime'] = attackStopped + 'z'
+                        TempOutputDictEvent['attackStartTime'] = attackStarted + 'Z'
+                        TempOutputDictEvent['attackStopTime'] = attackStopped + 'Z'
                         TempOutputDictEvent['attackTypes'] = misuseTypes
                         TempOutputDictEvent['peakBPS'] = x.net.bps
                         TempOutputDictEvent['peakPPS'] = x.net.pps
