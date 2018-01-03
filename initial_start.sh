@@ -50,6 +50,9 @@ sudo pip --upgrade install
 wait
 #----- others ---
 sudo pip install requests
+sudo pip install lxml
+sudo pip install cssselect
+wait
 sudo pip install --upgrade requests
 #----- Done -----
 sudo chmod -R u+x .
