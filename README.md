@@ -263,6 +263,16 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
         
             8) Commit changes at the top.  Arbor will start forwarding traffic once completed.
 
+        Arbor Firewall Access.
+           You must allow access to and from your server, in Arbor SP. Use the following commands to do so:
+             
+            https all <YOUR SERVER IP HERE>/32
+            ping all <YOUR SERVER IP HERE>/32
+            
+            shell
+            sudo iptables -A INPUT -p tcp -s <SERVER IP>/32 --dport 443 -j ACCEPT
+            sudo iptables -A OUTPUT -p udp -s <SERVER IP>/32 --dport 1514 -j ACCEPT
+
 ------------------------------------------------------------------------------------------------
     5) CableLabs - CRITS message information
 
@@ -341,6 +351,10 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
           
       Show Processes:  (nicer version of top)
           htop 
+
+      Make sure Arbor SP's firewall(s) allow access. 
+         1) Login to Arbor SP
+         2) run command: ip access show
 
 ------------------------------------------------------------------------------------------------
     8) Copyright
