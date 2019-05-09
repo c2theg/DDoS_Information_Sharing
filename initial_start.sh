@@ -59,6 +59,8 @@ sudo chmod -R u+x .
 # sudo chmod -R 755 . && sudo chown -R ubuntu:ubuntu .
 wait
 #------ Make Directory structures -----
+mkdir DDoS
+cd DDoS/
 SDKpath="$(pwd)/SDKs"
 mkdir $SDKpath
 cd $SDKpath/
