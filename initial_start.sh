@@ -13,8 +13,8 @@ echo "
 |_____|_|_|_| |_|___|_| |___|  _|_|_|___|_|    |_|_|_|_____|  |_____|_| |__,|_  |
                             |_|                                             |___|
 \r\n \r\n
-Version:  0.5.4             \r\n
-Last Updated:  6/24/2017
+Version:  0.5.5             \r\n
+Last Updated:  5/9/2019
 \r\n \r\n"
 MyPath=$(pwd)
 echo "Working out of directory: $MyPath \r\n \r\n"
@@ -33,7 +33,7 @@ sudo -E apt-get -y dist-upgrade
 wait
 sudo -E apt-get install -y ntp ntpdate ssh openssh-server openssl libssl-dev whois traceroute htop
 wait
-sudo -E apt-get install -y python-software-properties python python-pip python-dev python2.7
+sudo -E apt-get install -y python-software-properties python python-pip python-dev python2.7 libpython2.7-dev python2.7-dev --force-yes
 wait
 #---- install python dependancies ----
 #-- suds --
