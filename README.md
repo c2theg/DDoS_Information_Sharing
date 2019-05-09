@@ -268,10 +268,11 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
              
             https all <YOUR SERVER IP HERE>/32
             ping all <YOUR SERVER IP HERE>/32
+            config write
             
             shell
-            sudo iptables -A INPUT -p tcp -s <SERVER IP>/32 --dport 443 -j ACCEPT
-            sudo iptables -A OUTPUT -p udp -s <SERVER IP>/32 --dport 1514 -j ACCEPT
+            sudo iptables -A INPUT -p tcp -s <YOUR SERVER IP HERE>/32 --dport 443 -j ACCEPT
+            sudo iptables -A OUTPUT -p udp -s <YOUR SERVER IP HERE>/32 --dport 1514 -j ACCEPT
 
 ------------------------------------------------------------------------------------------------
     5) CableLabs - CRITS message information
