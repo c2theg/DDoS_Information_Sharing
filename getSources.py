@@ -1,10 +1,10 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
-# Copyright (c) 2016-2017 Christopher Gray & Daniel Phan - Comcast Cable Communications LLC.
+# Copyright (c) 2016-2017 Christopher Gray & Daniel Phan
 # Copyright (c) 2017 Rich Compton - Charter Communications
 # All rights reserved.
 # https://github.com/c2theg/DDoS_Infomation_Sharing
-#Inital: 12/23/16  Updated: 7/11/17
+#Inital: 12/23/16  Updated: 5/16/19
 
 #--- Force Python2 as Suds 0.04 doesn't support Python3 fully as of 11/10/2016
 from socket import *
@@ -131,15 +131,6 @@ appHeader = """\
                      | |) / _` | ' \| / -_) | |  _/ ' \/ _` | ' \ 
                      |___/\__,_|_||_|_\___|_| |_| |_||_\__,_|_||_|
                                                                       
-                   ___                      _      ___      _    _     
-                  / __|___ _ __  __ __ _ __| |_   / __|__ _| |__| |___ 
-                 | (__/ _ \ '  \/ _/ _` (_-<  _| | (__/ _` | '_ \ / -_)
-                  \___\___/_|_|_\__\__,_/__/\__|  \___\__,_|_.__/_\___|
-                       ___                     _    _    ___ 
-                      / __|___ _ __  _ __     | |  | |  / __|
-                     | (__/ _ \ '  \| '  \ _  | |__| |_| (__ 
-                      \___\___/_|_|_|_|_|_(_) |____|____\___|
-                                     
 -----------------------------------------------------------------------------------------
                                                                   
              _____ _     _      _____               _                         
