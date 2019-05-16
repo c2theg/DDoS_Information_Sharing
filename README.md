@@ -22,15 +22,6 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
                      | |) / _` | ' \| / -_) | |  _/ ' \/ _` | ' \
                      |___/\__,_|_||_|_\___|_| |_| |_||_\__,_|_||_|
 
-                   ___                      _      ___      _    _
-                  / __|___ _ __  __ __ _ __| |_   / __|__ _| |__| |___
-                 | (__/ _ \ '  \/ _/ _` (_-<  _| | (__/ _` | '_ \ / -_)
-                  \___\___/_|_|_\__\__,_/__/\__|  \___\__,_|_.__/_\___|
-                       ___                     _    _    ___
-                      / __|___ _ __  _ __     | |  | |  / __|
-                     | (__/ _ \ '  \| '  \ _  | |__| |_| (__
-                      \___\___/_|_|_|_|_|_(_) |____|____\___|
-
                           ___ __  _  __         ___ __  _ ____
                          |_  )  \/ |/ /   ___  |_  )  \/ |__  |
                           / / () | / _ \ |___|  / / () | | / /
@@ -39,8 +30,8 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
 
 
                    DDoS Source Information Sharing - Data Collector
-                                    Version: 0.2.33
-                                       11/26/2017
+                                    Version: 0.2.34
+                                       5/16/2019
                     https://github.com/c2theg/DDoS_Infomation_Sharing
                     
 ------------------------------------------------------------------------------------------------
@@ -54,7 +45,7 @@ This was built to interface with Arbor SP 7.6, but will be updated over time to 
     7) Troubleshooting
     8) Copyright Notice
     9) References
-
+    10) Changelog 
 ------------------------------------------------------------------------------------------------
     0) TL;DR:  - Gimme Gimme Gimme
         1) Unfortunately you have to setup the config.json file first. It's not hard, just a few values need to be changed, which are documented in Section 3.
@@ -368,7 +359,6 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
         For permission requests, write to the publisher, addressed “Attention: Permissions Coordinator,” at the address below.
 
         Christopher MJ Gray
-        christopher_gray3@cable.comcast.com
         christophermjgray@gmail.com
         
         Many other Companies/Employees have helped to make this possible. 
@@ -381,3 +371,10 @@ PLEASE RUN IT TWICE, as the updater.sh script itself gets updated with new files
             https://cablelabs.github.io/ddos-info-sharing/
             https://github.com/cablelabs/ddos-info-sharing
             https://dis-demo2.cablelabs.com/ips/list/  
+
+------------------------------------------------------------------------------------------------
+    10) Changelog
+    
+    5/16/19 - All references to Com cast have been removed. No elements of this project were made with com cast hardware / resources, and not during company hours, so no ownership is made by anyone other then myself. 
+            
+            
