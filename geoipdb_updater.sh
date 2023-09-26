@@ -6,7 +6,7 @@ echo " "
 echo " "
 download()
 {
-    maxmindURL="http://geolite.maxmind.com/download/geoip/database"
+    maxmindURL="https://geolite.maxmind.com/download/geoip/database"
     libpath="libraries/maxmind"
     MyPath=$(pwd)
  
@@ -60,13 +60,13 @@ download "" $file $newFile
 #------------------------- ASN -------------------------------------------
 file="GeoIPASNum.dat.gz"
 newFile="GeoIPASNum.dat"
-#http://download.maxmind.com/download/geoip/database/asnum/GeoIPASNum.dat.gz
+#https://download.maxmind.com/download/geoip/database/asnum/GeoIPASNum.dat.gz
 
 download "asnum/" $file $newFile
 #--------------------------------------------------------------------
 file="GeoIPASNumv6.dat.gz"
 newFile="GeoIPASNumv6.dat"
-#http://download.maxmind.com/download/geoip/database/asnum/GeoIPASNumv6.dat.gz
+#https://download.maxmind.com/download/geoip/database/asnum/GeoIPASNumv6.dat.gz
 
 download "asnum/" $file $newFile
 #--------------------------------------------------------------------
